@@ -1,0 +1,48 @@
+debug: false
+inform_players: true
+drop_forbidden_items: true
+items_use:
+  # If true, plugin will check item held in hand when player interacts with blocks or entities
+  check_items_use: true
+  left_click_items: [SHEARS, WOODEN_SHOVEL, STONE_SHOVEL, IRON_SHOVEL, GOLDEN_SHOVEL, DIAMOND_SHOVEL, WOODEN_AXE, STONE_AXE, IRON_AXE, GOLDEN_AXE, DIAMOND_AXE, WOODEN_PICKAXE, STONE_PICKAXE, IRON_PICKAXE, GOLDEN_PICKAXE, DIAMOND_PICKAXE, WOODEN_SWORD, STONE_SWORD, IRON_SWORD, GOLDEN_SWORD, DIAMOND_SWORD]
+  right_click_items: [CARROT_ON_A_STICK, GLASS_BOTTLE, FLINT_AND_STEEL, FISHING_ROD, SHEARS, BONE_MEAL, WOODEN_SHOVEL, STONE_SHOVEL, IRON_SHOVEL, GOLDEN_SHOVEL, DIAMOND_SHOVEL, WOODEN_AXE, STONE_AXE, IRON_AXE, GOLDEN_AXE, DIAMOND_AXE, WOODEN_HOE, STONE_HOE, IRON_HOE, GOLDEN_HOE, DIAMOND_HOE]
+message_prefix: '&f[&2MW&f] &4'
+default_message: Sorry, you don't have enough permissions
+do_not_show_message_for:
+- worldinteractions.vehicle.collide
+messages:
+  # General
+  worldinteractions.chat: Your mouth is too dry
+  worldinteractions.use-beds: You can't sleep yet, there are monsters nearby
+  # Entities
+  worldinteractions.interact: You are too jelly for &2%s
+  worldinteractions.target-by: "&a%s&4 pretends you don't exist"
+  worldinteractions.tame: This &a%s&4 is too ferocious
+  worldinteractions.breed: "&a%s&4 can't do that while you're watching"
+  worldinteractions.damage.deal: Your level is too low for &5%s
+  # Items
+  worldinteractions.use: You can't use &a%s&4 against &a%s
+  worldinteractions.enchant: Sorry, &a%s&4 is too powerful
+  worldinteractions.throw: You tried to throw &a%s&4, but it slipped out of your hands
+  worldinteractions.shoot: You aren't strong enough to draw a &a%s
+  worldinteractions.eat: You're scared to try new food like &a%s
+  worldinteractions.smelt: Can't smelt &a%s right now
+  worldinteractions.craft: Sorry, but &a%s&4 is too complicated
+  worldinteractions.drop: This is indecent to scatter &a%s&4 around
+  worldinteractions.pickup: Can't touch this!
+  worldinteractions.hold: Beware, &a%s&4 is cursed!
+  # Blocks
+  worldinteractions.bucket.empty: You suddenly realized you still need &a%s
+  worldinteractions.bucket.fill: This bucket is holey
+  worldinteractions.blocks.break: '&a%s&4 is tough for you'
+  worldinteractions.blocks.place: This is wrong place for &a%s
+  worldinteractions.hanging.break: '&a%s&4 is tough for you'
+  worldinteractions.hanging.place: This is wrong place for &a%s
+  # Transport
+  worldinteractions.transport.enter.boat: You are too heavy for this &a%s
+  worldinteractions.transport.enter.minecart: Sorry, but &a%s&4 is too small
+  worldinteractions.transport.enter: Can't ride on &a%s
+  worldinteractions.transport.break: This &a%s&4 is legal property of &bUnited States of
+    America
+  worldinteractions.transport.collide.boat: This boat is anchored to the bottom
+  worldinteractions.transport.collide.minecart: This is way too heavy to move

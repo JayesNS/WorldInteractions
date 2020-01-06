@@ -1,0 +1,8 @@
+name: WorldInteractions
+main: me.jsthats.worldinteractions.WorldInteractions
+version: "${project.version}"
+api-version: 1.15
+author: jayes
+website: www.bukkit.org
+description: World interactions permission ruleset
+depend: [Vault]
