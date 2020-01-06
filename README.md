@@ -14,7 +14,7 @@ use-beds | User permission to sleep
 #### Entities
 
 Permissions Node | Arguments | Description | Notes
---- |: --- :| --- |: --- :
+---|:---:|---|:---:
 interact.* | enitites | Permission to right click actions on entities like shearing or milking cow | Also checks permission to use item in hand
 target-by.* | entities | Permission to be followed by monsters or animals while holding proper food | -
 tame.* | animals | Permission to tame animals such as horses or wolves | -
@@ -25,7 +25,7 @@ damage.deal.* | entities | Permission to deal damage to entity | Also checks per
 #### Items
 
 Permissions Node | Arguments | Description | Notes
---- |: --- :| --- |: --- :
+---|:---:|---|:---:
 use.\*.on.\* | items and blocks/entities | Permission to use items specified in configuration on blocks or entities | This permissions is often used with other permissions to check if player can 
 enchant.* | enchantable items | Permission to enchant items | -
 throw.* | throwable items | Permission to throw items like eggs, snowballs, etc. | -
@@ -40,7 +40,7 @@ hold.* | items | Permission to hold item in hand | -
 #### Block related
 
 Permissions Node | Arguments | Description | Notes
---- |: --- :| --- |: --- :
+---|:---:|---|:---:
 interact.* | interactable blocks (e.g. craftbenches, furnaces) | Permission to right click interactable blocks like anvils, brewing stand, etc. | Also checks if player can interact blocks with item in hand
 bucket.empty.* | fluids | Permission to empty buccket full of fluid | Also checks if use can place fluid block (blocks.place) 
 bucket.fill.* | fluids | Permission to fill bucket with specified fluid | -
@@ -52,7 +52,7 @@ hanging.place.* | hangings (e.g. paintings, itemframes) | Permission to place ha
 #### Transport
 
 Permissions Node | Arguments | Description | Notes
---- |: --- :| --- |: --- :
+---|:---:|---|:---:
 transport.break.* | vehicles | Permission to destroy vehicles like boats or minecarts | -
 transport.enter.* | vehicles and mountable animals | Permission to enter vehicles or ride animals | -
 transport.collide.* | vehicles | Permissions to push vehicles | -
