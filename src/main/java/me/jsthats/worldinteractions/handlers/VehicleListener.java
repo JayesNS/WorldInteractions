@@ -39,7 +39,7 @@ public class VehicleListener extends GenericListener {
 				event.setCancelled(true);
 				return;
 			}
-			if (!doesPlayerHavePermission(player, Permissions.TRANSPORT_BREAK, vehicle)) {
+			if (!doesPlayerHavePermission(player, Permissions.MOUNT_BREAK, vehicle)) {
 				event.setCancelled(true);
 			}
 		}
@@ -52,7 +52,7 @@ public class VehicleListener extends GenericListener {
 		}
 
 		Player player = (Player) event.getEntered();
-		if (!doesPlayerHavePermission(player, Permissions.TRANSPORT_ENTER, event.getVehicle())) {
+		if (!doesPlayerHavePermission(player, Permissions.MOUNT_ENTER, event.getVehicle())) {
 			event.setCancelled(true);
 		}
 	}
@@ -63,7 +63,7 @@ public class VehicleListener extends GenericListener {
 			Player player = (Player) event.getEntity();
 			Vehicle vehicle = event.getVehicle();
 			if (vehicle != null
-				&& !doesPlayerHavePermission(player, Permissions.TRANSPORT_COLLIDE, vehicle)
+				&& !doesPlayerHavePermission(player, Permissions.MOUNT_COLLIDE, vehicle)
 			) {
 				event.setCancelled(true);
 				event.setCollisionCancelled(true);

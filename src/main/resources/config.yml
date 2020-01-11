@@ -1,15 +1,23 @@
+# Logs currently checked permissions into server console
 debug: false
+# Notify players about denied permissions
 inform_players: true
+# If set to true forbidden items will be dropped
 drop_forbidden_items: true
 items_use:
   # If true, plugin will check item held in hand when player interacts with blocks or entities
   check_items_use: true
   left_click_items: [SHEARS, WOODEN_SHOVEL, STONE_SHOVEL, IRON_SHOVEL, GOLDEN_SHOVEL, DIAMOND_SHOVEL, WOODEN_AXE, STONE_AXE, IRON_AXE, GOLDEN_AXE, DIAMOND_AXE, WOODEN_PICKAXE, STONE_PICKAXE, IRON_PICKAXE, GOLDEN_PICKAXE, DIAMOND_PICKAXE, WOODEN_SWORD, STONE_SWORD, IRON_SWORD, GOLDEN_SWORD, DIAMOND_SWORD]
   right_click_items: [CARROT_ON_A_STICK, GLASS_BOTTLE, FLINT_AND_STEEL, FISHING_ROD, SHEARS, BONEMEAL, WOODEN_SHOVEL, STONE_SHOVEL, IRON_SHOVEL, GOLDEN_SHOVEL, DIAMOND_SHOVEL, WOODEN_AXE, STONE_AXE, IRON_AXE, GOLDEN_AXE, DIAMOND_AXE, WOODEN_HOE, STONE_HOE, IRON_HOE, GOLDEN_HOE, DIAMOND_HOE]
+# Message prefix included in each message sent to player, leave '' if prefix is not needed
 message_prefix: '&f[&2WI&f] &4'
+# Default message sent when precises message is not present
 default_message: Sorry, you don't have enough permissions
+# This permission nodes will not log messages to player and console
 do_not_show_message_for:
 - worldinteractions.vehicle.collide
+- worldinteractions.target-by
+# Messages for specific permissions
 messages:
   # General
   worldinteractions.chat: Your mouth is too dry
@@ -38,11 +46,11 @@ messages:
   worldinteractions.blocks.place: This is wrong place for &a%s
   worldinteractions.hanging.break: '&a%s&4 is tough for you'
   worldinteractions.hanging.place: This is wrong place for &a%s
-  # Transport
-  worldinteractions.transport.enter.boat: You are too heavy for this &a%s
-  worldinteractions.transport.enter.minecart: Sorry, but &a%s&4 is too small
-  worldinteractions.transport.enter: Can't ride on &a%s
-  worldinteractions.transport.break: This &a%s&4 is legal property of &bUnited States of
+  # Mounts
+  worldinteractions.mount.enter.boat: You are too heavy for this &a%s
+  worldinteractions.mount.enter.minecart: Sorry, but &a%s&4 is too small
+  worldinteractions.mount.enter: Can't ride on &a%s
+  worldinteractions.mount.break: This &a%s&4 is legal property of &bUnited States of
     America
-  worldinteractions.transport.collide.boat: This boat is anchored to the bottom
-  worldinteractions.transport.collide.minecart: This is way too heavy to move
+  worldinteractions.mount.collide.boat: This boat is anchored to the bottom
+  worldinteractions.mount.collide.minecart: This is way too heavy to move

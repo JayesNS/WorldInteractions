@@ -146,53 +146,61 @@ public class PlayerListener extends GenericListener {
 		ItemStack heldItem = event.getPlayer().getInventory().getItemInMainHand();
 		Block clickedBlock = event.getClickedBlock();
 
-		Material[] throwableItems = {
-			Material.EGG,
-			Material.SNOWBALL,
-			Material.EXPERIENCE_BOTTLE,
-			Material.LINGERING_POTION,
-			Material.SPLASH_POTION,
-			Material.TRIDENT
-		};
 
-		//TODO: throwing, interacting mechanisms, interacting with blocks, left clicking
-
-		if (heldItem != null && (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK)) {
-			boolean isThrowableItem = Arrays.asList(throwableItems).contains(heldItem.getType());
-			if (isThrowableItem && !doesPlayerHavePermission(player, Permissions.THROW, heldItem)) {
-				event.setCancelled(true);
+		if (heldItem != null && clickedBlock != null) {
+			// Left clicking block with item in hand
+			if (action == Action.LEFT_CLICK_BLOCK) {
+				if (config.shouldCheckItemsUse()
+					&& config.getLeftClickItemsUse().contains(heldItem.getType())
+					&& !doesPlayerHavePermission(player, Permissions.USE, heldItem, "on", clickedBlock)) {
+					event.setCancelled(true);
+					return;
+				}
 			}
 		}
 
-		// Handle triggering redstone mechanisms
-		if (clickedBlock != null
-			&& action == Action.PHYSICAL
-			&& !doesPlayerHavePermission(player, Permissions.INTERACT, clickedBlock)) {
-			event.setCancelled(true);
-			return;
-		}
-
-		if (clickedBlock != null && clickedBlock.getType().isInteractable()
-			&& event.getAction() == Action.RIGHT_CLICK_BLOCK
-			&& !doesPlayerHavePermission(player, Permissions.INTERACT, clickedBlock)) {
-			event.setCancelled(true);
-		}
-
-		if (heldItem != null
-			&& action == Action.LEFT_CLICK_AIR) {
-			if (config.shouldCheckItemsUse()
-				&& config.getLeftClickItemsUse().contains(heldItem.getType())
-				&& !doesPlayerHavePermission(player, Permissions.USE, heldItem)) {
+		if (clickedBlock != null) {
+			// Handle triggering redstone mechanisms
+			if (action == Action.PHYSICAL && !doesPlayerHavePermission(player, Permissions.INTERACT, clickedBlock)) {
+				event.setCancelled(true);
+				return;
+			}
+			// Interactable blocks
+			if (clickedBlock.getType().isInteractable()
+				&& event.getAction() == Action.RIGHT_CLICK_BLOCK
+				&& !doesPlayerHavePermission(player, Permissions.INTERACT, clickedBlock)) {
 				event.setCancelled(true);
 				return;
 			}
 		}
 
-		if (heldItem != null && clickedBlock != null && action == Action.LEFT_CLICK_BLOCK) {
-			if (config.shouldCheckItemsUse()
-				&& config.getLeftClickItemsUse().contains(heldItem.getType())
-				&& !doesPlayerHavePermission(player, Permissions.USE, heldItem, "on", clickedBlock)) {
-				event.setCancelled(true);
+		if (heldItem != null) {
+			// Check use of throwable items
+			if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
+				Material[] throwableItems = {
+						Material.EGG,
+						Material.ENDER_EYE,
+						Material.EXPERIENCE_BOTTLE,
+						Material.LINGERING_POTION,
+						Material.SPLASH_POTION,
+						Material.SNOWBALL,
+						Material.TRIDENT
+				};
+				boolean isThrowableItem = Arrays.asList(throwableItems).contains(heldItem.getType());
+				if (isThrowableItem && !doesPlayerHavePermission(player, Permissions.THROW, heldItem)) {
+					event.setCancelled(true);
+					return;
+				}
+			}
+
+			// Left clicking air with item
+			if (action == Action.LEFT_CLICK_AIR) {
+				if (config.shouldCheckItemsUse()
+					&& config.getLeftClickItemsUse().contains(heldItem.getType())
+					&& !doesPlayerHavePermission(player, Permissions.USE, heldItem)) {
+					event.setCancelled(true);
+					return;
+				}
 			}
 		}
 	}

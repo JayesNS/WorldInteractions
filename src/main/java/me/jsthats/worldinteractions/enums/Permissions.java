@@ -1,37 +1,42 @@
 package me.jsthats.worldinteractions.enums;
 
+import org.bukkit.entity.Player;
+
 /**
- * @author g4rnek
+ * @author Jayes
  */
 public enum Permissions {
+    // General,
+    CHAT("chat"),
+    USE_BEDS("use-beds"),
+    // Entities,
     INTERACT("interact"),
+    TARGET_BY("target-by"),
+    TAME("tame"),
+    BREED("breed"),
+    DAMAGE_DEAL("damage.deal"),
+    // Items,
     USE("use"),
     ENCHANT("enchant"),
     THROW("throw"),
+    SHOOT("shoot"),
     EAT("eat"),
+    SMELT("smelt"),
     CRAFT("craft"),
-    HOLD("hold"),
     DROP("drop"),
-    CHAT("chat"),
-    USE_BEDS("use-beds"),
+    PICKUP("pickup"),
+    HOLD("hold"),
+    // Blocks
     BUCKET_EMPTY("bucket.empty"),
     BUCKET_FILL("bucket.fill"),
     BLOCK_BREAK("blocks.break"),
     BLOCK_PLACE("blocks.place"),
     HANGING_BREAK("hanging.break"),
     HANGING_PLACE("hanging.place"),
-    DAMAGE_DEAL("damage.deal"),
-    DAMAGE_TAKE("damage.take"),
-    TAME("tame"),
-    SHOOT("shoot"),
-    PICKUP("pickup"),
-    TRANSPORT_BREAK("transport.break"),
-    TRANSPORT_ENTER("transport.enter"),
-    TRANSPORT_COLLIDE("transport.collide"),
-    TARGET_BY("target-by"),
-    HAVE("have"),
-    SMELT("smelt"),
-    BREED("breed");
+    // Mount
+    MOUNT_BREAK("mount.break"),
+    MOUNT_ENTER("mount.enter"),
+    MOUNT_COLLIDE("mount.collide");
 
     private String permission;
 
@@ -42,4 +47,4 @@ public enum Permissions {
     Permissions(String permission) {
         this.permission = permission;
     }
-}
+    }
