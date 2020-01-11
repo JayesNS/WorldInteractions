@@ -1,21 +1,3 @@
-/*
- * WorldInteractions - permission ruleset plugin for Spigot server
- * Copyright (C) 2019 Jayes http://www.jsthats.me
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
 package me.jsthats.worldinteractions.handlers;
 
 import java.util.Arrays;
@@ -37,7 +19,7 @@ import org.bukkit.plugin.Plugin;
 import me.jsthats.worldinteractions.helpers.PluginConfig;
 
 /**
- * @author t3hk0d3 g4rnek
+ * @author Jayes t3hk0d3
  */
 public class PlayerListener extends GenericListener {
 
@@ -139,54 +121,6 @@ public class PlayerListener extends GenericListener {
 		this.checkPlayerInventory(player);
 	}
 
-	/*@EventHandler(priority = EventPriority.LOW)
-	public void onPlayerInventoryClick(InventoryClickEvent event) {
-		InventoryHolder holder = event.getInventory().getHolder();
-
-		if (holder instanceof Player || // do not track inter-inventory stuff
-				event.getRawSlot() >= event.getView().getTopInventory().getSize() || // top inventory only
-				event.getSlotType() == InventoryType.SlotType.OUTSIDE ||  // do not track drop
-				event.getSlot() == -999) { // temporary fix for bukkit bug (BUKKIT-2768)
-			return;
-		}
-
-		ItemStack take = event.getCurrentItem();
-
-		String action;
-		ItemStack item;
-
-		if (take == null) {
-			action = "put";
-			item = event.getCursor();
-		} else {
-			action = "take";
-			item = take;
-		}
-
-		Player player = (Player) event.getWhoClicked();
-
-		if (permissionDenied(player, "modifyworld.items", action, item, "of", event.getInventory().getType())) {
-			event.setCancelled(true);
-		}
-	}*/
-
-	/*@EventHandler(priority = EventPriority.LOW)
-	public void onPlayerInventoryEvent(InventoryClickEvent event) {
-		ItemStack item = event.getCursor();
-
-		if (item == null || item.getType() == Material.AIR || event.getSlotType() != InventoryType.SlotType.QUICKBAR) {
-			return;
-		}
-
-		Player player = (Player) event.getWhoClicked();
-
-		int targetSlot = player.getInventory().getHeldItemSlot();
-
-		if (event.getSlot() == targetSlot && permissionDenied(player, "modifyworld.items.hold", item)) {
-			event.setCancelled(true);
-		}
-	}*/
-
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
 		Player player = event.getPlayer();
@@ -220,6 +154,8 @@ public class PlayerListener extends GenericListener {
 			Material.SPLASH_POTION,
 			Material.TRIDENT
 		};
+
+		//TODO: throwing, interacting mechanisms, interacting with blocks, left clicking
 
 		if (heldItem != null && (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK)) {
 			boolean isThrowableItem = Arrays.asList(throwableItems).contains(heldItem.getType());

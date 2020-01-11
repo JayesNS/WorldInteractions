@@ -12,6 +12,9 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 
+/**
+ * @author Jayes
+ */
 public abstract class ObjectDescriber {
     public static String describe(Object object) {
         return describe(object, false);
@@ -28,7 +31,7 @@ public abstract class ObjectDescriber {
         } else if (obj instanceof ItemStack) {
             name =  describe((ItemStack) obj);
         } else if (obj instanceof Entity) {
-            name =  describe((Entity) obj);
+            name =  describe((Entity) obj, prettify);
         } else if (obj instanceof Material) {
             name =  describe((Material) obj);
         } else if (obj instanceof EntityDamageEvent.DamageCause) {
@@ -48,11 +51,17 @@ public abstract class ObjectDescriber {
     }
 
     private static String describe(Entity entity) {
+        return describe(entity, false);
+    }
+    private static String describe(Entity entity, boolean onlyName) {
         EntityCategory category = EntityCategory.fromEntity(entity);
         String entityName = entity.getType().name();
-        return category != null
-            ? category.getName() + "." + entityName
-            : entityName;
+
+        if (onlyName || category == null) {
+            return entityName;
+        } else {
+            return category.getName() + "." + entityName;
+        }
     }
 
     private static String describe(Item item) {

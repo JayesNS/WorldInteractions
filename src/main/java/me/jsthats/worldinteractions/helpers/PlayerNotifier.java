@@ -3,8 +3,10 @@ package me.jsthats.worldinteractions.helpers;
 import org.bukkit.entity.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
+/**
+ * @author Jayes t3hk0d3
+ */
 public class PlayerNotifier {
 
 	PluginConfig config;
