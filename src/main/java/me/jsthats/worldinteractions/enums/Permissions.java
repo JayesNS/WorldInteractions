@@ -1,7 +1,5 @@
 package me.jsthats.worldinteractions.enums;
 
-import org.bukkit.entity.Player;
-
 /**
  * @author Jayes
  */

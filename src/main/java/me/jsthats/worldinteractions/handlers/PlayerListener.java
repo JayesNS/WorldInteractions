@@ -1,6 +1,10 @@
 package me.jsthats.worldinteractions.handlers;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import me.jsthats.worldinteractions.helpers.GenericListener;
 import me.jsthats.worldinteractions.enums.Permissions;
@@ -139,23 +143,34 @@ public class PlayerListener extends GenericListener {
 		}
 	}
 
+	private boolean isActionDenied(Action action, Action actionToCheck, ItemStack item, List<Material> itemsToCheck) {
+		return action == actionToCheck && config.shouldCheckItemsUse() && itemsToCheck.contains(item);
+	}
+
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Action action = event.getAction();
 		Player player = event.getPlayer();
-		ItemStack heldItem = event.getPlayer().getInventory().getItemInMainHand();
+		ItemStack heldItem = event.getItem();
 		Block clickedBlock = event.getClickedBlock();
-
 
 		if (heldItem != null && clickedBlock != null) {
 			// Left clicking block with item in hand
-			if (action == Action.LEFT_CLICK_BLOCK) {
-				if (config.shouldCheckItemsUse()
-					&& config.getLeftClickItemsUse().contains(heldItem.getType())
+			if (action == Action.LEFT_CLICK_BLOCK
+				&& config.shouldCheckItemsUse()
+				&& config.getLeftClickItemsUse().contains(heldItem.getType())
+				&& !doesPlayerHavePermission(player, Permissions.USE, heldItem, "on", clickedBlock)) {
+				event.setCancelled(true);
+				return;
+			}
+
+			// Right clicking block with item in hand
+			if (action == Action.RIGHT_CLICK_BLOCK
+					&& config.shouldCheckItemsUse()
+					&& config.getRightClickItemsUse().contains(heldItem.getType())
 					&& !doesPlayerHavePermission(player, Permissions.USE, heldItem, "on", clickedBlock)) {
-					event.setCancelled(true);
-					return;
-				}
+				event.setCancelled(true);
+				return;
 			}
 		}
 
@@ -167,7 +182,7 @@ public class PlayerListener extends GenericListener {
 			}
 			// Interactable blocks
 			if (clickedBlock.getType().isInteractable()
-				&& event.getAction() == Action.RIGHT_CLICK_BLOCK
+				&& action == Action.RIGHT_CLICK_BLOCK
 				&& !doesPlayerHavePermission(player, Permissions.INTERACT, clickedBlock)) {
 				event.setCancelled(true);
 				return;
