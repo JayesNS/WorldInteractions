@@ -81,6 +81,10 @@ public abstract class ObjectDescriber {
     }
 
     private static String describe(Material material) {
+        if (MaterialUtils.isSpawnEgg(material)) {
+            return material.name().replace("_SPAWN_EGG", "");
+        }
+
         return material.name();
     }
 

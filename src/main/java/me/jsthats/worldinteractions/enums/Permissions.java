@@ -13,6 +13,7 @@ public enum Permissions {
     TAME("tame"),
     BREED("breed"),
     DAMAGE_DEAL("damage.deal"),
+    SPAWN("spawn"),
     // Items,
     USE("use"),
     ENCHANT("enchant"),
@@ -31,10 +32,11 @@ public enum Permissions {
     BLOCK_PLACE("blocks.place"),
     HANGING_BREAK("hanging.break"),
     HANGING_PLACE("hanging.place"),
-    // Mount
+    // Mount,
     MOUNT_BREAK("mount.break"),
     MOUNT_ENTER("mount.enter"),
-    MOUNT_COLLIDE("mount.collide");
+    MOUNT_COLLIDE("mount.collide"),
+    MOUNT_PLACE("mount.place");
 
     private String permission;
 

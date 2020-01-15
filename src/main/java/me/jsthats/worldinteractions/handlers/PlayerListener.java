@@ -1,13 +1,10 @@
 package me.jsthats.worldinteractions.handlers;
 
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import me.jsthats.worldinteractions.helpers.GenericListener;
 import me.jsthats.worldinteractions.enums.Permissions;
+import me.jsthats.worldinteractions.helpers.MaterialUtils;
 import me.jsthats.worldinteractions.helpers.PlayerNotifier;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -131,6 +128,12 @@ public class PlayerListener extends GenericListener {
 		Entity clickedEntity = event.getRightClicked();
 		ItemStack heldItem = player.getInventory().getItemInMainHand();
 
+		if (MaterialUtils.isSpawnEgg(heldItem.getType())
+			&& !doesPlayerHavePermission(player, Permissions.SPAWN, heldItem)) {
+			event.setCancelled(true);
+			return;
+		}
+
 		if (config.shouldCheckItemsUse()
 			&& config.getRightClickItemsUse().contains(heldItem.getType())
 			&& !doesPlayerHavePermission(player, Permissions.USE, heldItem, "on", clickedEntity)) {
@@ -141,10 +144,6 @@ public class PlayerListener extends GenericListener {
 		if (!doesPlayerHavePermission(player, Permissions.INTERACT, clickedEntity)) {
 			event.setCancelled(true);
 		}
-	}
-
-	private boolean isActionDenied(Action action, Action actionToCheck, ItemStack item, List<Material> itemsToCheck) {
-		return action == actionToCheck && config.shouldCheckItemsUse() && itemsToCheck.contains(item);
 	}
 
 	@EventHandler(priority = EventPriority.LOW)
@@ -169,6 +168,20 @@ public class PlayerListener extends GenericListener {
 					&& config.shouldCheckItemsUse()
 					&& config.getRightClickItemsUse().contains(heldItem.getType())
 					&& !doesPlayerHavePermission(player, Permissions.USE, heldItem, "on", clickedBlock)) {
+				event.setCancelled(true);
+				return;
+			}
+
+			if (action == Action.RIGHT_CLICK_BLOCK
+				&& MaterialUtils.isVehicle(heldItem.getType())
+				&& !doesPlayerHavePermission(player, Permissions.MOUNT_PLACE, heldItem)) {
+				event.setCancelled(true);
+				return;
+			}
+
+			if ((action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR)
+				&& MaterialUtils.isSpawnEgg(heldItem.getType())
+				&& !doesPlayerHavePermission(player, Permissions.SPAWN, heldItem)) {
 				event.setCancelled(true);
 				return;
 			}

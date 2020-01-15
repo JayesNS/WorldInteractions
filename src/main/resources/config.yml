@@ -28,6 +28,7 @@ messages:
   worldinteractions.tame: This &a%s&4 is too ferocious
   worldinteractions.breed: "&a%s&4 can't do that while you're watching"
   worldinteractions.damage.deal: Your level is too low for &5%s
+  worldinteractions.spawn: "&a%s&4 doesn't want to get out of its egg"
   # Items
   worldinteractions.use: You can't use &a%s&4 against &a%s
   worldinteractions.enchant: Sorry, &a%s&4 is too powerful
@@ -50,6 +51,7 @@ messages:
   worldinteractions.mount.enter.boat: You are too heavy for this &a%s
   worldinteractions.mount.enter.minecart: Sorry, but &a%s&4 is too small
   worldinteractions.mount.enter: Can't ride on &a%s
+  worldinteractions.mount.place: You should go for a walk, instead of using &a%s
   worldinteractions.mount.break: This &a%s&4 is legal property of &bUnited States of
     America
   worldinteractions.mount.collide.boat: This boat is anchored to the bottom
