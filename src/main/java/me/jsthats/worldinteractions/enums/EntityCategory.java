@@ -40,6 +40,13 @@ public enum EntityCategory {
 	public Class<? extends Entity>[] getClasses() {
 		return this.classes;
 	}
+
+	public static boolean isCategory(Entity entity, EntityCategory category) {
+		if (fromEntity(entity) == null) {
+			return false;
+		}
+		return fromEntity(entity).getName().equals(category.getName());
+	}
 	
 	public static EntityCategory fromEntity(Entity entity) {
 		for (Class<? extends Entity> entityClass : map.keySet()) {
@@ -47,7 +54,6 @@ public enum EntityCategory {
 				return map.get(entityClass);
 			}
 		}
-		
 		return null;
 	}
 	

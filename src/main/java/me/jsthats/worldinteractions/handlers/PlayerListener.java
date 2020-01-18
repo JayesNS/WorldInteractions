@@ -174,7 +174,7 @@ public class PlayerListener extends GenericListener {
 
 			if (action == Action.RIGHT_CLICK_BLOCK
 				&& MaterialUtils.isVehicle(heldItem.getType())
-				&& !doesPlayerHavePermission(player, Permissions.MOUNT_PLACE, heldItem)) {
+				&& !doesPlayerHavePermission(player, Permissions.VEHICLE_PLACE, heldItem)) {
 				event.setCancelled(true);
 				return;
 			}

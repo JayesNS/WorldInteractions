@@ -57,11 +57,9 @@ public abstract class ObjectDescriber {
         EntityCategory category = EntityCategory.fromEntity(entity);
         String entityName = entity.getType().name();
 
-        if (onlyName || category == null) {
-            return entityName;
-        } else {
-            return category.getName() + "." + entityName;
-        }
+        return onlyName || category == null
+            ? entityName
+            : category.getName() + "." + entityName;
     }
 
     private static String describe(Item item) {
@@ -81,15 +79,13 @@ public abstract class ObjectDescriber {
     }
 
     private static String describe(Material material) {
-        if (MaterialUtils.isSpawnEgg(material)) {
-            return material.name().replace("_SPAWN_EGG", "");
-        }
-
-        return material.name();
+        return MaterialUtils.isSpawnEgg(material)
+            ? material.name().replace("_SPAWN_EGG", "")
+            : material.name();
     }
 
     private static String describe(Vehicle vehicle) {
-        return vehicle.getName();
+        return describe((Entity) vehicle);
     }
 
     private static String describe(Block block) {
@@ -97,9 +93,9 @@ public abstract class ObjectDescriber {
     }
 
     private static String formatName(String name, boolean prettify) {
-        String lowercaseName = name.toLowerCase();
+        String lowercaseName = name.toLowerCase().replaceAll("_", " ");
         return prettify
-            ? WordUtils.capitalizeFully(lowercaseName.replaceAll("_", " "))
-            : lowercaseName.replaceAll("_" , "");
+            ? WordUtils.capitalizeFully(lowercaseName)
+            : lowercaseName;
     }
 }

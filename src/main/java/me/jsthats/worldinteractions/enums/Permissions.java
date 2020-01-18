@@ -14,6 +14,7 @@ public enum Permissions {
     BREED("breed"),
     DAMAGE_DEAL("damage.deal"),
     SPAWN("spawn"),
+    RIDE("ride"),
     // Items,
     USE("use"),
     ENCHANT("enchant"),
@@ -25,7 +26,7 @@ public enum Permissions {
     DROP("drop"),
     PICKUP("pickup"),
     HOLD("hold"),
-    // Blocks
+    // Blocks,
     BUCKET_EMPTY("bucket.empty"),
     BUCKET_FILL("bucket.fill"),
     BLOCK_BREAK("blocks.break"),
@@ -33,10 +34,10 @@ public enum Permissions {
     HANGING_BREAK("hanging.break"),
     HANGING_PLACE("hanging.place"),
     // Mount,
-    MOUNT_BREAK("mount.break"),
-    MOUNT_ENTER("mount.enter"),
-    MOUNT_COLLIDE("mount.collide"),
-    MOUNT_PLACE("mount.place");
+    VEHICLE_BREAK("vehicle.break"),
+    VEHICLE_ENTER("vehicle.enter"),
+    VEHICLE_COLLIDE("vehicle.collide"),
+    VEHICLE_PLACE("vehicle.place");
 
     private String permission;
 

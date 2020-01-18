@@ -1,9 +1,11 @@
 package me.jsthats.worldinteractions.handlers;
 
+import me.jsthats.worldinteractions.enums.EntityCategory;
 import me.jsthats.worldinteractions.helpers.GenericListener;
 import me.jsthats.worldinteractions.enums.Permissions;
 import me.jsthats.worldinteractions.helpers.PlayerNotifier;
 import me.jsthats.worldinteractions.helpers.PluginConfig;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
@@ -39,7 +41,7 @@ public class VehicleListener extends GenericListener {
 				event.setCancelled(true);
 				return;
 			}
-			if (!doesPlayerHavePermission(player, Permissions.MOUNT_BREAK, vehicle)) {
+			if (!doesPlayerHavePermission(player, Permissions.VEHICLE_BREAK, vehicle)) {
 				event.setCancelled(true);
 			}
 		}
@@ -50,9 +52,16 @@ public class VehicleListener extends GenericListener {
 		if (!(event.getEntered() instanceof Player)) {
 			return;
 		}
-
 		Player player = (Player) event.getEntered();
-		if (!doesPlayerHavePermission(player, Permissions.MOUNT_ENTER, event.getVehicle())) {
+		Entity entity = event.getVehicle();
+
+		if (EntityCategory.isCategory(entity, EntityCategory.ANIMAL)
+			&& !doesPlayerHavePermission(player, Permissions.RIDE, entity)) {
+			event.setCancelled(true);
+		}
+
+		if (!EntityCategory.isCategory(entity, EntityCategory.ANIMAL)
+			&& !doesPlayerHavePermission(player, Permissions.VEHICLE_ENTER, entity)) {
 			event.setCancelled(true);
 		}
 	}
@@ -63,7 +72,7 @@ public class VehicleListener extends GenericListener {
 			Player player = (Player) event.getEntity();
 			Vehicle vehicle = event.getVehicle();
 			if (vehicle != null
-				&& !doesPlayerHavePermission(player, Permissions.MOUNT_COLLIDE, vehicle)
+				&& !doesPlayerHavePermission(player, Permissions.VEHICLE_COLLIDE, vehicle)
 			) {
 				event.setCancelled(true);
 				event.setCollisionCancelled(true);
