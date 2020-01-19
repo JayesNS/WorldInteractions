@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>me.jsthats</groupId>
     <artifactId>WorldInteractions</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <name>WorldInteractions</name>
     <url>https://github.com/JayesNS/WorldInteractions</url>
     <issueManagement>
