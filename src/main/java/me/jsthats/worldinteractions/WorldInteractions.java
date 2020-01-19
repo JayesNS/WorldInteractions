@@ -14,6 +14,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -37,7 +38,7 @@ public class WorldInteractions extends JavaPlugin {
 		BlockListener.class,
 		VehicleListener.class
 	};
-	protected List<GenericListener> listeners = new ArrayList<GenericListener>();
+	protected List<GenericListener> listeners = new ArrayList<>();
 	protected PlayerNotifier notifier;
 	protected File configFile;
 	protected FileConfiguration config;
@@ -151,6 +152,7 @@ public class WorldInteractions extends JavaPlugin {
         return base;
     }
 
+	@NotNull
 	@Override
 	public FileConfiguration getConfig() {
 		if (this.config == null) {

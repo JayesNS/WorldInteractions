@@ -45,15 +45,13 @@ public abstract class GenericListener implements Listener {
 	}
 
 	private String buildPermission(String basePermission, Object... arguments) {
-		List<String> argumentStrings = Arrays.asList(arguments).stream()
+		List<String> argumentStrings = Arrays.stream(arguments)
 			.filter(Objects::nonNull)
-			.map(argument -> ObjectDescriber.describe(argument))
+			.map(ObjectDescriber::describe)
 			.collect(Collectors.toList());
 		List<String> permissionNodes = Stream.of(basePermission).collect(Collectors.toList());
 
-		if (argumentStrings != null) {
-			permissionNodes.addAll(argumentStrings);
-		}
+		permissionNodes.addAll(argumentStrings);
 
 		return String.join(".", permissionNodes);
 	}

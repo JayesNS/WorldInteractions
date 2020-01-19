@@ -42,16 +42,6 @@ public class BlockListener extends GenericListener {
 	}
 
 	@EventHandler(priority = EventPriority.LOW)
-	public void onPrepareItemEnchant(PrepareItemEnchantEvent event) {
-		Player player = event.getEnchanter();
-		ItemStack item = event.getItem();
-
-		if (!doesPlayerHavePermission(player, Permissions.ENCHANT, item)) {
-			event.setCancelled(true);
-		}
-	}
-
-	@EventHandler(priority = EventPriority.LOW)
 	public void onBlockBreak(BlockBreakEvent event) {
 		Player player = event.getPlayer();
 		Block brokenBlock = event.getBlock();
@@ -113,7 +103,8 @@ public class BlockListener extends GenericListener {
 		Player player = event.getPlayer();
 		Entity placedObject = event.getEntity();
 
-		if (!doesPlayerHavePermission(player, Permissions.HANGING_PLACE, placedObject)) {
+		if (player != null
+			&& !doesPlayerHavePermission(player, Permissions.HANGING_PLACE, placedObject)) {
 			event.setCancelled(true);
 		}
 	}

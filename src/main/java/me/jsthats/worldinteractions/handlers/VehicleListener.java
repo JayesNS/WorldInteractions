@@ -71,9 +71,7 @@ public class VehicleListener extends GenericListener {
 		if (event.getEntity() instanceof Player) {
 			Player player = (Player) event.getEntity();
 			Vehicle vehicle = event.getVehicle();
-			if (vehicle != null
-				&& !doesPlayerHavePermission(player, Permissions.VEHICLE_COLLIDE, vehicle)
-			) {
+			if (!doesPlayerHavePermission(player, Permissions.VEHICLE_COLLIDE, vehicle)) {
 				event.setCancelled(true);
 				event.setCollisionCancelled(true);
 				event.setPickupCancelled(true);

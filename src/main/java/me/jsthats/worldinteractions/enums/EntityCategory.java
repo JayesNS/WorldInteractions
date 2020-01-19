@@ -18,16 +18,17 @@ public enum EntityCategory {
 	PROJECTILE("projectile", Projectile.class);
 	
 	private String name;
-	private Class<? extends Entity> classes[];
+	private Class<? extends Entity>[] classes;
 	
-	private final static Map<Class<? extends Entity>, EntityCategory> map = new HashMap<Class<? extends Entity>, EntityCategory>();
+	private final static Map<Class<? extends Entity>, EntityCategory> map = new HashMap<>();
 	
 	static {
-		Arrays.asList(EntityCategory.values()).stream()
-			.forEach(category -> Arrays.asList(category.getClasses()).stream()
+		Arrays.stream(EntityCategory.values())
+			.forEach(category -> Arrays.stream(category.getClasses())
 				.forEach(categoryClass -> map.put(categoryClass, category)));
 	}
 	
+	@SafeVarargs
 	EntityCategory(String name, Class<? extends Entity>... classes) {
 		this.name = name;
 		this.classes = classes;

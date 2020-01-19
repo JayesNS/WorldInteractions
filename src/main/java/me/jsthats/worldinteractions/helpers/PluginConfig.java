@@ -3,6 +3,7 @@ package me.jsthats.worldinteractions.helpers;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Objects;
@@ -30,8 +31,10 @@ public class PluginConfig {
         return this.config.getBoolean("drop_forbidden_items");
     }
 
+    @NotNull
     public String getDefaultMessage() {
-        return this.config.getString("default_message");
+        String message = this.config.getString("default_message");
+        return message != null ? message : "No message";
     }
 
     public String getMessagePrefix() {

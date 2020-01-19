@@ -56,7 +56,8 @@ public class PlayerListener extends GenericListener {
 		Player player = event.getPlayer();
 		Material material = event.getBlockClicked().getType();
 
-		if (!doesPlayerHavePermission(player, Permissions.BUCKET_FILL, material)) {
+		if (material != Material.AIR
+			&& !doesPlayerHavePermission(player, Permissions.BUCKET_FILL, material)) {
 			event.setCancelled(true);
 		}
 	}
@@ -78,7 +79,6 @@ public class PlayerListener extends GenericListener {
 		if (!doesPlayerHavePermission(player, Permissions.DROP, objectsToDescribe)) {
 			event.setCancelled(true);
 		}
-		this.checkPlayerInventory(player);
 	}
 
 	@EventHandler(priority = EventPriority.LOW)
@@ -118,8 +118,6 @@ public class PlayerListener extends GenericListener {
 			}
 			event.setCancelled(true);
 		}
-
-		this.checkPlayerInventory(player);
 	}
 
 	@EventHandler(priority = EventPriority.LOW)
@@ -227,7 +225,6 @@ public class PlayerListener extends GenericListener {
 					&& config.getLeftClickItemsUse().contains(heldItem.getType())
 					&& !doesPlayerHavePermission(player, Permissions.USE, heldItem)) {
 					event.setCancelled(true);
-					return;
 				}
 			}
 		}
@@ -253,15 +250,19 @@ public class PlayerListener extends GenericListener {
 			InventoryType.WORKBENCH
 		};
 
-		if (Arrays.asList(furnaces).contains(inventory.getType())) {
+		if (event.getSlotType() == InventoryType.SlotType.OUTSIDE) {
+			return;
+		}
+
+		if (item != null && Arrays.asList(furnaces).contains(inventory.getType())) {
 			if (item.getType() != Material.AIR
 				&& event.getSlotType() == InventoryType.SlotType.CRAFTING
 			) {
 				if (!doesPlayerHavePermission(player, Permissions.SMELT, item)) {
 					event.setCancelled(true);
 				}
-			} else if (event.getCurrentItem().getType() != Material.AIR
-				&& event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY
+			} else if (event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY
+				&& event.getCurrentItem().getType() != Material.AIR
 				&& (event.getSlotType() == InventoryType.SlotType.CONTAINER
 					|| event.getSlotType() == InventoryType.SlotType.QUICKBAR)
 			) {
@@ -273,10 +274,9 @@ public class PlayerListener extends GenericListener {
 			&& Arrays.asList(workstations).contains(inventory.getType())
 			&& event.getCurrentItem().getType() != Material.AIR
 			&& event.getSlotType() == InventoryType.SlotType.RESULT
+		    && !doesPlayerHavePermission(player, Permissions.CRAFT, event.getCurrentItem())
 		) {
-			if (!doesPlayerHavePermission(player, Permissions.CRAFT, event.getCurrentItem())) {
-				event.setCancelled(true);
-			}
+			event.setCancelled(true);
 		}
 	}
 
@@ -330,24 +330,5 @@ public class PlayerListener extends GenericListener {
 				player.getInventory().addItem(foodSource);
 			}
 		}
-	}
-
-	protected void checkPlayerInventory(Player player) {
-		/*if (!this.checkInventory) {
-			return;
-		}
-
-		Inventory inventory = player.getInventory();
-		Arrays.asList(inventory.getContents()).forEach(item -> {
-			if (item != null
-				&& !doesPlayerHavePermission(player, Permissions.HAVE, item)
-			) {
-				inventory.remove(item);
-
-				if (this.alwaysDropRestrictedItem) {
-					player.getWorld().dropItemNaturally(player.getLocation(), item);
-				}
-			}
-		});*/
 	}
 }

@@ -79,9 +79,13 @@ public abstract class ObjectDescriber {
     }
 
     private static String describe(Material material) {
-        return MaterialUtils.isSpawnEgg(material)
-            ? material.name().replace("_SPAWN_EGG", "")
-            : material.name();
+        if (MaterialUtils.isSpawnEgg(material)) {
+            return material.name().replace("_SPAWN_EGG", "");
+        }
+        if (material.name().contains("bucket")) {
+            return material.name().replace("bucket", "");
+        }
+        return material.name();
     }
 
     private static String describe(Vehicle vehicle) {
@@ -93,9 +97,9 @@ public abstract class ObjectDescriber {
     }
 
     private static String formatName(String name, boolean prettify) {
-        String lowercaseName = name.toLowerCase().replaceAll("_", " ");
+        String lowercaseName = name.toLowerCase();
         return prettify
-            ? WordUtils.capitalizeFully(lowercaseName)
-            : lowercaseName;
+            ? WordUtils.capitalizeFully(lowercaseName.replaceAll("_", " "))
+            : lowercaseName.replaceAll("_" , "");
     }
 }
