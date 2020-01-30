@@ -22,32 +22,31 @@ messages:
   # General
   worldinteractions.chat: Your mouth is too dry
   worldinteractions.use-beds: You can't sleep yet, there are monsters nearby
+  # Weapons
+  worldinteractions.throw: You tried to throw &a%s&4, but it slipped out of your hands
+  worldinteractions.shoot: You aren't strong enough to draw a &a%s
   # Entities
   worldinteractions.interact: You are too jelly for &2%s
   worldinteractions.target-by: "&a%s&4 pretends you don't exist"
-  worldinteractions.tame: This &a%s&4 is too ferocious
-  worldinteractions.breed: "&a%s&4 can't do that while you're watching"
   worldinteractions.damage.deal: Your level is too low for &5%s
-  worldinteractions.spawn: "&a%s&4 doesn't want to get out of its egg"
-  worldinteractions.ride: Can't ride &a%s
+  worldinteractions.mob.tame: This &a%s&4 is too ferocious
+  worldinteractions.mob.breed: "&a%s&4 can't do that while you're watching"
+  worldinteractions.mob.spawn: "&a%s&4 doesn't want to get out of its egg"
+  worldinteractions.mob.ride: Can't ride &a%s
   # Items
-  worldinteractions.use: You can't use &a%s&4 against &a%s
-  worldinteractions.enchant: Sorry, &a%s&4 is too powerful
-  worldinteractions.throw: You tried to throw &a%s&4, but it slipped out of your hands
-  worldinteractions.shoot: You aren't strong enough to draw a &a%s
-  worldinteractions.eat: You're scared to try new food like &a%s
-  worldinteractions.smelt: Can't smelt &a%s right now
-  worldinteractions.craft: Sorry, but &a%s&4 is too complicated
-  worldinteractions.drop: This is indecent to scatter &a%s&4 around
-  worldinteractions.pickup: Can't touch this!
-  worldinteractions.hold: Beware, &a%s&4 is cursed!
+  worldinteractions.item.use: You can't use &a%s&4 against &a%s
+  worldinteractions.item.enchant: Sorry, &a%s&4 is too powerful
+  worldinteractions.item.eat: You're scared to try new food like &a%s
+  worldinteractions.item.smelt: Can't smelt &a%s right now
+  worldinteractions.item.craft: Sorry, but &a%s&4 is too complicated
+  worldinteractions.item.drop: This is indecent to scatter &a%s&4 around
+  worldinteractions.item.pickup: Can't touch this!
+  worldinteractions.item.hold: Beware, &a%s&4 is cursed!
   # Blocks
   worldinteractions.bucket.empty: You suddenly realized you still need &a%s
   worldinteractions.bucket.fill: This bucket is holey
-  worldinteractions.blocks.break: '&a%s&4 is tough for you'
   worldinteractions.blocks.place: This is wrong place for &a%s
-  worldinteractions.hanging.break: '&a%s&4 is tough for you'
-  worldinteractions.hanging.place: This is wrong place for &a%s
+  worldinteractions.blocks.break: '&a%s&4 is tough for you'
   # Vehicles
   worldinteractions.vehicle.enter.boat: You are too heavy for this &a%s
   worldinteractions.vehicle.enter.minecart: Sorry, but &a%s&4 is too small

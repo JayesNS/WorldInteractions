@@ -108,7 +108,7 @@ public class BlockListener extends GenericListener {
 				return;
 			}
 
-			if (!doesPlayerHavePermission(player, Permissions.HANGING_BREAK, destroyedObject)) {
+			if (!doesPlayerHavePermission(player, Permissions.BLOCK_BREAK, destroyedObject)) {
 				event.setCancelled(true);
 			}
 		}
@@ -120,7 +120,7 @@ public class BlockListener extends GenericListener {
 		Entity placedObject = event.getEntity();
 
 		if (player != null
-			&& !doesPlayerHavePermission(player, Permissions.HANGING_PLACE, placedObject)) {
+			&& !doesPlayerHavePermission(player, Permissions.BLOCK_BREAK, placedObject)) {
 			event.setCancelled(true);
 		}
 	}
