@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>me.jsthats</groupId>
     <artifactId>WorldInteractions</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
     <name>WorldInteractions</name>
     <url>https://github.com/JayesNS/WorldInteractions</url>
     <issueManagement>
@@ -11,7 +11,7 @@
     </issueManagement>
     <scm>
         <developerConnection>scm:git:https://github.com/JayesNS/WorldInteractions.git</developerConnection>
-      <tag>1.0.0</tag>
+      <tag>1.0.1</tag>
   </scm>
     <build>
         <finalName>${project.artifactId}-${project.version}</finalName>
