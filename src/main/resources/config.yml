@@ -45,8 +45,8 @@ messages:
   # Blocks
   worldinteractions.bucket.empty: You suddenly realized you still need &a%s
   worldinteractions.bucket.fill: This bucket is holey
-  worldinteractions.blocks.place: This is wrong place for &a%s
-  worldinteractions.blocks.break: '&a%s&4 is tough for you'
+  worldinteractions.block.place: This is wrong place for &a%s
+  worldinteractions.block.break: '&a%s&4 is tough for you'
   # Vehicles
   worldinteractions.vehicle.enter.boat: You are too heavy for this &a%s
   worldinteractions.vehicle.enter.minecart: Sorry, but &a%s&4 is too small

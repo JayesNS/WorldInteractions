@@ -171,13 +171,13 @@ public class PlayerListener extends GenericListener {
 
 		if (heldItem != null && clickedBlock != null) {
 			// Left clicking block with item in hand
-			if (action == Action.LEFT_CLICK_BLOCK
+			/*if (action == Action.LEFT_CLICK_BLOCK
 				&& config.shouldCheckItemsUse()
 				&& config.getLeftClickItemsUse().contains(heldItem.getType())
 				&& !doesPlayerHavePermission(player, Permissions.USE, heldItem, "on", clickedBlock)) {
 				event.setCancelled(true);
 				return;
-			}
+			}*/
 
 			// Right clicking block with item in hand
 			if (action == Action.RIGHT_CLICK_BLOCK
@@ -238,13 +238,13 @@ public class PlayerListener extends GenericListener {
 			}
 
 			// Left clicking air with item
-			if (action == Action.LEFT_CLICK_AIR) {
+/*			if (action == Action.LEFT_CLICK_AIR) {
 				if (config.shouldCheckItemsUse()
 					&& config.getLeftClickItemsUse().contains(heldItem.getType())
 					&& !doesPlayerHavePermission(player, Permissions.USE, heldItem)) {
 					event.setCancelled(true);
 				}
-			}
+			}*/
 		}
 	}
 

@@ -18,11 +18,10 @@
 
 package me.jsthats.worldinteractions.helpers;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.*;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.MissingFormatArgumentException;
+import java.util.*;
 
 /**
  * @author t3hk0d3 Jayes
@@ -35,7 +34,41 @@ public class PlayerNotifier {
 		this.config = config;
 	}
 
+	public void informPlayer(Player player, String permission, String ...args) {
+		if (!config.shouldInformPlayer()) {
+			return;
+		}
+		ConfigurationSection allMessages = config.getMessages();
+
+		String message = config.getDefaultMessage();
+		while (permission.contains(".")) {
+			String finalPermission = permission;
+			Optional<String> messageOptional = allMessages.getKeys(false)
+				.stream()
+				.filter(key -> {
+					String regExp = "^" + key.replaceAll("\\.", "\\\\.").replaceAll("\\*", "[\\\\w*]+") + "$";
+					return finalPermission.matches(regExp);
+				})
+				.map(key -> allMessages.getString(key))
+				.findAny();
+
+			if (messageOptional.isPresent()) {
+				message = messageOptional.get();
+				break;
+			}
+
+			permission = permission.substring(0, permission.lastIndexOf("."));
+		}
+
+		player.sendMessage(config
+			.getMessagePrefix()
+			.concat(String.format(message, args))
+			.replaceAll("&([a-z0-9])", "\u00A7$1")
+		);
+	}
+
 	// TODO: Refactor needed
+	@Deprecated
 	public void informPlayer(Player player, String permission, Object... args) {
 		if (!config.shouldInformPlayer()) {
 			return;

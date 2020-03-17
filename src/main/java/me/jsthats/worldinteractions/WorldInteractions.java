@@ -27,6 +27,7 @@ import me.jsthats.worldinteractions.handlers.VehicleListener;
 import me.jsthats.worldinteractions.helpers.GenericListener;
 import me.jsthats.worldinteractions.helpers.PlayerNotifier;
 import me.jsthats.worldinteractions.helpers.PluginConfig;
+import me.jsthats.worldinteractions.listeners.EventListeners;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -75,6 +76,7 @@ public class WorldInteractions extends JavaPlugin {
 
 		this.notifier = new PlayerNotifier(new PluginConfig(config));
 
+		getServer().getPluginManager().registerEvents(new EventListeners(this.notifier), this);
 		this.registerListeners();
 		this.getLogger().info("WorldInteractions enabled!");
 

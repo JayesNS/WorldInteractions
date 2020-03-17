@@ -18,12 +18,16 @@
 
 package me.jsthats.worldinteractions.handlers;
 
+import me.jsthats.worldinteractions.events.*;
 import me.jsthats.worldinteractions.helpers.GenericListener;
 import me.jsthats.worldinteractions.enums.Permissions;
 import me.jsthats.worldinteractions.helpers.PlayerNotifier;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -47,6 +51,13 @@ public class BlockListener extends GenericListener {
 		this.config = config;
 	}
 
+	public void callCustomEvent(CustomEvent customEvent, Cancellable bukkitEvent) {
+		Bukkit.getServer().getPluginManager().callEvent(customEvent);
+		if (customEvent.isCancelled()) {
+			bukkitEvent.setCancelled(true);
+		}
+	}
+
 	@EventHandler(priority = EventPriority.LOW)
 	public void onItemEnchant(EnchantItemEvent event) {
 		Player player = event.getEnchanter();
@@ -60,37 +71,25 @@ public class BlockListener extends GenericListener {
 	@EventHandler(priority = EventPriority.LOW)
 	public void onBlockBreak(BlockBreakEvent event) {
 		Player player = event.getPlayer();
-		Block brokenBlock = event.getBlock();
+		Block block = event.getBlock();
 		ItemStack itemInHand = player.getInventory().getItemInMainHand();
 
-		if (config.shouldCheckItemsUse()
-			&& config.getLeftClickItemsUse().contains(itemInHand.getType())
-			&& !doesPlayerHavePermission(player, Permissions.USE, itemInHand, "on", brokenBlock)) {
-			event.setCancelled(true);
-			return;
+		if (itemInHand != null && itemInHand.getType() != Material.AIR) {
+			callCustomEvent(new PlayerBreakBlockWithEvent(player, block, itemInHand), event);
+		} else if (itemInHand != null && itemInHand.getType() == Material.AIR) {
+			callCustomEvent(new PlayerBreakBlockEvent(player, block), event);
 		}
 
-		if (!doesPlayerHavePermission(player, Permissions.BLOCK_BREAK, brokenBlock)) {
-			event.setCancelled(true);
-		}
 	}
 
 	@EventHandler(priority = EventPriority.LOW)
 	public void onBlockPlace(BlockPlaceEvent event) {
 		Player player = event.getPlayer();
-		Block placedBlock = event.getBlock();
-		ItemStack itemInHand = player.getInventory().getItemInMainHand();
+		Block block = event.getBlock();
+		Block blockAgainst = event.getBlockAgainst();
 
-		if (config.shouldCheckItemsUse()
-			&& config.getRightClickItemsUse().contains(itemInHand.getType())
-			&& !doesPlayerHavePermission(player, Permissions.USE, itemInHand, "on", event.getBlockAgainst())) {
-			event.setCancelled(true);
-			return;
-		}
-
-		if (!placedBlock.getType().equals(event.getBlockReplacedState().getType())
-			&& !doesPlayerHavePermission(player, Permissions.BLOCK_PLACE, placedBlock)) {
-			event.setCancelled(true);
+		if (blockAgainst != null) {
+			callCustomEvent(new PlayerPlaceBlockAgainstEvent(player, block, blockAgainst), event);
 		}
 	}
 

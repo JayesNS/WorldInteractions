@@ -48,8 +48,10 @@ public enum Permissions {
     // Blocks
     BUCKET_EMPTY("bucket.empty"),
     BUCKET_FILL("bucket.fill"),
-    BLOCK_PLACE("block.place"),
-    BLOCK_BREAK("block.break"),
+    BLOCK_PLACE("block.place.%s"),
+    BLOCK_PLACE_AGAINST("block.place.%s.against.%s"),
+    BLOCK_BREAK("block.break.%s"),
+    BLOCK_BREAK_WITH("block.break.%s.with.%s"),
     // Mount
     VEHICLE_ENTER("vehicle.enter"),
     VEHICLE_PLACE("vehicle.place"),
@@ -58,11 +60,12 @@ public enum Permissions {
 
     private String permission;
 
-    public String getPermission() {
-        return permission;
-    }
-
     Permissions(String permission) {
         this.permission = permission;
     }
+
+    public String getPermission() {
+        return "worldinteractions." + permission;
     }
+
+}

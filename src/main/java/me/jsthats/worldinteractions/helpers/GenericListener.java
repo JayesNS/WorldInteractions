@@ -36,7 +36,6 @@ public abstract class GenericListener implements Listener {
 
 	protected PlayerNotifier notifier;
 	protected PluginConfig config;
-	protected final String BASE_PERMISSION = "worldinteractions";
 	protected Plugin plugin;
 
 	public GenericListener(Plugin plugin, PluginConfig config, PlayerNotifier notifier) {
@@ -48,7 +47,7 @@ public abstract class GenericListener implements Listener {
 	}
 
 	protected boolean doesPlayerHavePermission(Player player, Permissions permissions, Object... objectsToDescribe) {
-		String basePermission = BASE_PERMISSION + "." + permissions.getPermission();
+		String basePermission = permissions.getPermission();
 		String permission = buildPermission(basePermission, objectsToDescribe);
 		boolean isAllowed = player.hasPermission(permission);
 		boolean shouldNotify = config.shouldShowMessageFor(basePermission);
