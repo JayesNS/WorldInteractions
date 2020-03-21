@@ -16,13 +16,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.jsthats.worldinteractions.handlers;
+package me.jsthats.worldinteractions.listeners.bukkit;
 
 import me.jsthats.worldinteractions.enums.EntityCategory;
+import me.jsthats.worldinteractions.events.CustomEvent;
+import me.jsthats.worldinteractions.events.vehicles.PlayerBreakVehicleEvent;
+import me.jsthats.worldinteractions.events.vehicles.PlayerBreakVehicleWithEvent;
 import me.jsthats.worldinteractions.helpers.GenericListener;
 import me.jsthats.worldinteractions.enums.Permissions;
 import me.jsthats.worldinteractions.helpers.PlayerNotifier;
 import me.jsthats.worldinteractions.helpers.PluginConfig;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Vehicle;
@@ -46,26 +50,28 @@ public class VehicleListener extends GenericListener {
 		this.config = config;
 	}
 
-	@EventHandler(priority = EventPriority.LOW)
+	@Deprecated
+    @EventHandler(priority = EventPriority.LOW)
 	public void onVehicleDamage(VehicleDamageEvent event) {
 		if (event.getAttacker() instanceof Player) {
 			Player player = (Player) event.getAttacker();
 			Vehicle vehicle = event.getVehicle();
 			ItemStack itemInHand = player.getInventory().getItemInMainHand();
 
-			if (config.shouldCheckItemsUse()
-				&& config.getLeftClickItemsUse().contains(itemInHand.getType())
-				&& !doesPlayerHavePermission(player, Permissions.USE, itemInHand, "on", vehicle)) {
-				event.setCancelled(true);
+			if (player == null) {
 				return;
 			}
-			if (!doesPlayerHavePermission(player, Permissions.VEHICLE_BREAK, vehicle)) {
-				event.setCancelled(true);
+
+			if (itemInHand.getType() != Material.AIR) {
+				CustomEvent.callCustomEvent(new PlayerBreakVehicleWithEvent(player, vehicle, itemInHand), event);
+			} else if (itemInHand.getType() == Material.AIR) {
+				CustomEvent.callCustomEvent(new PlayerBreakVehicleEvent(player, vehicle), event);
 			}
 		}
 	}
 
-	@EventHandler(priority = EventPriority.LOW)
+	@Deprecated
+    @EventHandler(priority = EventPriority.LOW)
 	public void onVehicleEnter(VehicleEnterEvent event) {
 		if (!(event.getEntered() instanceof Player)) {
 			return;
@@ -84,7 +90,8 @@ public class VehicleListener extends GenericListener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.LOW)
+	@Deprecated
+    @EventHandler(priority = EventPriority.LOW)
 	public void onVehicleEntityCollision(VehicleEntityCollisionEvent event) {
 		if (event.getEntity() instanceof Player) {
 			Player player = (Player) event.getEntity();

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.jsthats.worldinteractions.handlers;
+package me.jsthats.worldinteractions.listeners.bukkit;
 
 import me.jsthats.worldinteractions.helpers.GenericListener;
 import me.jsthats.worldinteractions.enums.Permissions;
@@ -50,7 +50,8 @@ public class PlayerListener extends GenericListener {
 		this.config = config;
 	}
 
-	@EventHandler(priority = EventPriority.LOW)
+	@Deprecated
+    @EventHandler(priority = EventPriority.LOW)
 	public void onPlayerBedEnter(PlayerBedEnterEvent event) {
 		Player player = event.getPlayer();
 
@@ -59,7 +60,8 @@ public class PlayerListener extends GenericListener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.LOW)
+	@Deprecated
+    @EventHandler(priority = EventPriority.LOW)
 	public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
 		Player player = event.getPlayer();
 		Material bucket = event.getBucket();
@@ -69,7 +71,8 @@ public class PlayerListener extends GenericListener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.LOW)
+	@Deprecated
+    @EventHandler(priority = EventPriority.LOW)
 	public void onPlayerBucketFill(PlayerBucketFillEvent event) {
 		Player player = event.getPlayer();
 		Material material = event.getBlockClicked().getType();
@@ -80,7 +83,8 @@ public class PlayerListener extends GenericListener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.LOW)
+	@Deprecated
+    @EventHandler(priority = EventPriority.LOW)
 	public void onPlayerChat(AsyncPlayerChatEvent event) {
 		Player player = event.getPlayer();
 
@@ -89,7 +93,8 @@ public class PlayerListener extends GenericListener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.LOW)
+	@Deprecated
+    @EventHandler(priority = EventPriority.LOW)
 	public void onPlayerDropItem(PlayerDropItemEvent event) {
 		Player player = event.getPlayer();
 		Item[] objectsToDescribe = {event.getItemDrop()};
@@ -99,7 +104,8 @@ public class PlayerListener extends GenericListener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.LOW)
+	@Deprecated
+    @EventHandler(priority = EventPriority.LOW)
 	public void onItemHeldChange(PlayerItemHeldEvent event) {
 		Player player = event.getPlayer();
 		ItemStack item = player.getInventory().getItem(event.getNewSlot());
@@ -138,7 +144,8 @@ public class PlayerListener extends GenericListener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.LOW)
+	@Deprecated
+    @EventHandler(priority = EventPriority.LOW)
 	public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
 		Player player = event.getPlayer();
 		Entity clickedEntity = event.getRightClicked();
@@ -162,7 +169,8 @@ public class PlayerListener extends GenericListener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.LOW)
+	@Deprecated
+    @EventHandler(priority = EventPriority.LOW)
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Action action = event.getAction();
 		Player player = event.getPlayer();
@@ -179,21 +187,21 @@ public class PlayerListener extends GenericListener {
 				return;
 			}*/
 
-			// Right clicking block with item in hand
+			/*// Right clicking block with item in hand
 			if (action == Action.RIGHT_CLICK_BLOCK
 					&& config.shouldCheckItemsUse()
 					&& config.getRightClickItemsUse().contains(heldItem.getType())
 					&& !doesPlayerHavePermission(player, Permissions.USE, heldItem, "on", clickedBlock)) {
 				event.setCancelled(true);
 				return;
-			}
+			}*/
 
-			if (action == Action.RIGHT_CLICK_BLOCK
+			/*if (action == Action.RIGHT_CLICK_BLOCK
 				&& MaterialUtils.isVehicle(heldItem.getType())
 				&& !doesPlayerHavePermission(player, Permissions.VEHICLE_PLACE, heldItem)) {
 				event.setCancelled(true);
 				return;
-			}
+			}*/
 
 			if ((action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR)
 				&& MaterialUtils.isSpawnEgg(heldItem.getType())
@@ -209,13 +217,14 @@ public class PlayerListener extends GenericListener {
 				event.setCancelled(true);
 				return;
 			}
+			/*
 			// Interactable blocks
 			if (clickedBlock.getType().isInteractable()
 				&& action == Action.RIGHT_CLICK_BLOCK
 				&& !doesPlayerHavePermission(player, Permissions.INTERACT, clickedBlock)) {
 				event.setCancelled(true);
 				return;
-			}
+			}*/
 		}
 
 		if (heldItem != null) {
@@ -248,7 +257,8 @@ public class PlayerListener extends GenericListener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.LOW)
+	@Deprecated
+    @EventHandler(priority = EventPriority.LOW)
 	public void onInventory(InventoryClickEvent event) {
 		Player player = (Player) event.getWhoClicked();
 		Inventory inventory = event.getInventory();
@@ -298,7 +308,8 @@ public class PlayerListener extends GenericListener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.LOW)
+	@Deprecated
+    @EventHandler(priority = EventPriority.LOW)
 	public void onPlayerRecipeDiscover(PlayerRecipeDiscoverEvent event) {
 		Player player = event.getPlayer();
 		String materialName = event.getRecipe().getKey().replaceAll("_from.*", "").toUpperCase();
@@ -309,7 +320,8 @@ public class PlayerListener extends GenericListener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.LOW)
+	@Deprecated
+    @EventHandler(priority = EventPriority.LOW)
 	public void onPlayerFish(PlayerFishEvent event) {
 		Player player = event.getPlayer();
 		ItemStack fishingRod = player.getInventory().getItemInMainHand();
@@ -322,6 +334,7 @@ public class PlayerListener extends GenericListener {
 		}
 	}
 
+//	@Deprecated
 //	@EventHandler(priority = EventPriority.LOW)
 //	public void onItemCraft(CraftItemEvent event) {
 //		Player player = (Player) event.getWhoClicked();
@@ -332,7 +345,8 @@ public class PlayerListener extends GenericListener {
 //		}
 //	}
 
-	@EventHandler(priority = EventPriority.LOW)
+	@Deprecated
+    @EventHandler(priority = EventPriority.LOW)
 	public void onFoodLevelChange(FoodLevelChangeEvent event) {
 		if (event.getEntity() instanceof Player) {
 			Player player = (Player) event.getEntity();

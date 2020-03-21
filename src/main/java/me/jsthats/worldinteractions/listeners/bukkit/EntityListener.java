@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.jsthats.worldinteractions.handlers;
+package me.jsthats.worldinteractions.listeners.bukkit;
 
 import me.jsthats.worldinteractions.helpers.GenericListener;
 import me.jsthats.worldinteractions.enums.Permissions;
@@ -44,6 +44,7 @@ public class EntityListener extends GenericListener {
 		this.config = config;
 	}
 
+	@Deprecated
 	@EventHandler(priority = EventPriority.LOW)
 	public void onEntityDamage(EntityDamageByEntityEvent event) {
 		if (event.getDamager() instanceof Player) {
@@ -63,6 +64,7 @@ public class EntityListener extends GenericListener {
 		}
 	}
 
+	@Deprecated
 	@EventHandler(priority = EventPriority.LOW)
 	public void onEntityTame(EntityTameEvent event) {
 		if (!(event.getOwner() instanceof Player)) {
@@ -77,6 +79,7 @@ public class EntityListener extends GenericListener {
 		}
 	}
 
+	@Deprecated
 	@EventHandler(priority = EventPriority.LOW)
 	public void onEntityBreed(EntityBreedEvent event) {
 		if (event.getBreeder() instanceof Player) {
@@ -92,6 +95,7 @@ public class EntityListener extends GenericListener {
 		}
 	}
 
+	@Deprecated
 	@EventHandler(priority = EventPriority.LOW)
 	public void onEntityShootBow(EntityShootBowEvent event) {
 		if (event.getEntity() instanceof Player) {
@@ -111,6 +115,7 @@ public class EntityListener extends GenericListener {
 		}
 	}
 
+	@Deprecated
 	@EventHandler(priority = EventPriority.LOW)
 	public void onEntityTarget(EntityTargetEvent event) {
 		if (event.getTarget() instanceof Player) {
@@ -123,6 +128,7 @@ public class EntityListener extends GenericListener {
 		}
 	}
 
+	@Deprecated
 	@EventHandler(priority = EventPriority.LOW)
 	public void onEntityPickup(EntityPickupItemEvent event) {
 		if (event.getEntity() instanceof Player) {

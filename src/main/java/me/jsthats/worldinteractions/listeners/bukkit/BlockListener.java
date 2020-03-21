@@ -16,23 +16,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.jsthats.worldinteractions.handlers;
+package me.jsthats.worldinteractions.listeners.bukkit;
 
 import me.jsthats.worldinteractions.events.*;
+import me.jsthats.worldinteractions.events.blocks.*;
 import me.jsthats.worldinteractions.helpers.GenericListener;
-import me.jsthats.worldinteractions.enums.Permissions;
 import me.jsthats.worldinteractions.helpers.PlayerNotifier;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.inventory.ItemStack;
@@ -51,35 +48,21 @@ public class BlockListener extends GenericListener {
 		this.config = config;
 	}
 
-	public void callCustomEvent(CustomEvent customEvent, Cancellable bukkitEvent) {
-		Bukkit.getServer().getPluginManager().callEvent(customEvent);
-		if (customEvent.isCancelled()) {
-			bukkitEvent.setCancelled(true);
-		}
-	}
-
-	@EventHandler(priority = EventPriority.LOW)
-	public void onItemEnchant(EnchantItemEvent event) {
-		Player player = event.getEnchanter();
-		ItemStack enchantedItem = event.getItem();
-
-		if (!doesPlayerHavePermission(player, Permissions.ENCHANT, enchantedItem)) {
-			event.setCancelled(true);
-		}
-	}
-
 	@EventHandler(priority = EventPriority.LOW)
 	public void onBlockBreak(BlockBreakEvent event) {
 		Player player = event.getPlayer();
 		Block block = event.getBlock();
 		ItemStack itemInHand = player.getInventory().getItemInMainHand();
 
-		if (itemInHand != null && itemInHand.getType() != Material.AIR) {
-			callCustomEvent(new PlayerBreakBlockWithEvent(player, block, itemInHand), event);
-		} else if (itemInHand != null && itemInHand.getType() == Material.AIR) {
-			callCustomEvent(new PlayerBreakBlockEvent(player, block), event);
+		if (itemInHand == null) {
+			return;
 		}
 
+		if (itemInHand.getType() == Material.AIR) {
+			CustomEvent.callCustomEvent(new PlayerBreakBlockEvent(player, block), event);
+		} else if (itemInHand.getType() != Material.AIR) {
+			CustomEvent.callCustomEvent(new PlayerBreakBlockWithItemEvent(player, block, itemInHand), event);
+		}
 	}
 
 	@EventHandler(priority = EventPriority.LOW)
@@ -87,9 +70,18 @@ public class BlockListener extends GenericListener {
 		Player player = event.getPlayer();
 		Block block = event.getBlock();
 		Block blockAgainst = event.getBlockAgainst();
+		ItemStack itemInHand = event.getItemInHand();
 
-		if (blockAgainst != null) {
-			callCustomEvent(new PlayerPlaceBlockAgainstEvent(player, block, blockAgainst), event);
+		if (blockAgainst == null) {
+			return;
+		}
+
+		if (blockAgainst.getType() == Material.AIR) {
+			CustomEvent.callCustomEvent(new PlayerPlaceBlockEvent(player, block), event);
+		} else if (block.getType() == Material.FARMLAND || block.getType() == Material.GRASS_PATH) {
+			CustomEvent.callCustomEvent(new PlayerPlaceBlockUsingItemEvent(player, block, itemInHand), event);
+		} else if (blockAgainst.getType() != Material.AIR) {
+			CustomEvent.callCustomEvent(new PlayerPlaceBlockAgainstBlockEvent(player, block, blockAgainst), event);
 		}
 	}
 
@@ -97,30 +89,31 @@ public class BlockListener extends GenericListener {
 	public void onHangingBreakByEntity(HangingBreakByEntityEvent event) {
 		if (event.getRemover() instanceof Player) {
 			Player player = (Player) event.getRemover();
-			Entity destroyedObject = event.getEntity();
+			Entity hanging = event.getEntity();
 			ItemStack itemInHand = player.getInventory().getItemInMainHand();
 
-			if (config.shouldCheckItemsUse()
-				&& config.getLeftClickItemsUse().contains(itemInHand.getType())
-				&& !doesPlayerHavePermission(player, Permissions.USE, itemInHand, "on", destroyedObject)) {
-				event.setCancelled(true);
-				return;
-			}
-
-			if (!doesPlayerHavePermission(player, Permissions.BLOCK_BREAK, destroyedObject)) {
-				event.setCancelled(true);
+			if (itemInHand.getType() == Material.AIR) {
+				CustomEvent.callCustomEvent(new PlayerBreakHangingEvent(player, hanging), event);
+			} else if (itemInHand.getType() != Material.AIR) {
+				CustomEvent.callCustomEvent(new PlayerBreakHangingWithItemEvent(player, hanging, itemInHand), event);
 			}
 		}
 	}
 
 	@EventHandler(priority = EventPriority.LOW)
-	public void onPaintingPlace(HangingPlaceEvent event) {
+	public void onHangingPlace(HangingPlaceEvent event) {
 		Player player = event.getPlayer();
-		Entity placedObject = event.getEntity();
+		Entity hanging = event.getEntity();
+		Block blockAgainst = event.getBlock();
 
-		if (player != null
-			&& !doesPlayerHavePermission(player, Permissions.BLOCK_BREAK, placedObject)) {
-			event.setCancelled(true);
+		if (player == null) {
+			return;
+		}
+
+		if (blockAgainst.getType() == Material.AIR) {
+			CustomEvent.callCustomEvent(new PlayerPlaceHangingEvent(player, hanging), event);
+		} else if (blockAgainst.getType() != Material.AIR) {
+			CustomEvent.callCustomEvent(new PlayerPlaceHangingAgainstBlockEvent(player, hanging, blockAgainst), event);
 		}
 	}
 }

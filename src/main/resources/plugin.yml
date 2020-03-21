@@ -5,3 +5,49 @@ api-version: "1.15"
 author: jayes
 website: www.bukkit.org
 description: World interactions permission ruleset
+permissions:
+  worldinteractions:
+    description: All permissions of WorldInteractions
+    default: false
+    children:
+      worldinteractions.*: true
+      worldinteractions.block: true
+  worldinteractions.*:
+    description: All permissions of WorldInteractions
+    default: false
+  worldinteractions.block:
+    description: Permission related to blocks
+    default: false
+    children:
+      worldinteractions.block.*: true
+      worldinteractions.block.place: true
+      worldinteractions.block.break: true
+  worldinteractions.block.*:
+    description: Permission related to blocks
+    default: false
+  worldinteractions.block.place:
+    description: Permission related to placing blocks
+    default: false
+    children:
+      worldinteractions.block.place.*: true
+  worldinteractions.block.place.*:
+    description: Permission related to placing blocks
+    default: false
+    children:
+      worldinteractions.block.place.*.againsts.*: true
+  worldinteractions.block.place.*.againsts.*:
+    description: Permission related to placing blocks against given block
+    default: false
+  worldinteractions.block.break:
+    description: Permission related to breaking blocks
+    default: false
+    children:
+      worldinteractions.block.break.*: true
+  worldinteractions.block.break.*:
+    description: Permission related to breaking blocks
+    default: false
+    children:
+      worldinteractions.block.break.*.with.*: true
+  worldinteractions.block.break.*.with.*:
+    description: Permission related to breaking blocks with specified item in hand
+    default: false

@@ -20,14 +20,11 @@ package me.jsthats.worldinteractions;
 
 import java.io.InputStreamReader;
 
-import me.jsthats.worldinteractions.handlers.BlockListener;
-import me.jsthats.worldinteractions.handlers.EntityListener;
-import me.jsthats.worldinteractions.handlers.PlayerListener;
-import me.jsthats.worldinteractions.handlers.VehicleListener;
 import me.jsthats.worldinteractions.helpers.GenericListener;
 import me.jsthats.worldinteractions.helpers.PlayerNotifier;
 import me.jsthats.worldinteractions.helpers.PluginConfig;
-import me.jsthats.worldinteractions.listeners.EventListeners;
+import me.jsthats.worldinteractions.listeners.bukkit.*;
+import me.jsthats.worldinteractions.listeners.custom.EventListeners;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -54,7 +51,8 @@ public class WorldInteractions extends JavaPlugin {
 		PlayerListener.class,
 		EntityListener.class,
 		BlockListener.class,
-		VehicleListener.class
+		VehicleListener.class,
+		ItemListener.class
 	};
 	protected List<GenericListener> listeners = new ArrayList<>();
 	protected PlayerNotifier notifier;

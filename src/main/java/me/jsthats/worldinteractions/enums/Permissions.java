@@ -38,7 +38,8 @@ public enum Permissions {
     RIDE("mob.ride"),
     // Items
     USE("item.use"),
-    ENCHANT("item.enchant"),
+    ENCHANT_ITEM("item.enchant.%s"),
+    ENCHANT_ITEM_WITH("item.enchant.%s.with.%s.%s"),
     EAT("item.eat"),
     SMELT("item.smelt"),
     CRAFT("item.craft"),
@@ -50,12 +51,14 @@ public enum Permissions {
     BUCKET_FILL("bucket.fill"),
     BLOCK_PLACE("block.place.%s"),
     BLOCK_PLACE_AGAINST("block.place.%s.against.%s"),
+    BLOCK_PLACE_USING("block.place.%s.using.%s"),
     BLOCK_BREAK("block.break.%s"),
     BLOCK_BREAK_WITH("block.break.%s.with.%s"),
     // Mount
     VEHICLE_ENTER("vehicle.enter"),
     VEHICLE_PLACE("vehicle.place"),
-    VEHICLE_BREAK("vehicle.break"),
+    VEHICLE_BREAK("vehicle.break.%s"),
+    VEHICLE_BREAK_WITH("vehicle.break.%s.with.%s"),
     VEHICLE_COLLIDE("vehicle.collide");
 
     private String permission;
