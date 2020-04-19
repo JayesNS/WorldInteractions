@@ -1,22 +1,22 @@
 package me.jsthats.worldinteractions.events.blocks;
 
 import org.jetbrains.annotations.NotNull;
-import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerBucketEmptyEvent;
 
 import me.jsthats.worldinteractions.enums.Permissions;
 import me.jsthats.worldinteractions.events.CustomEvent;
 
-public class PlayerPlaceBlockEvent extends CustomEvent {
-    protected final BlockPlaceEvent sourceEvent;
+public class PlayerEmptyBucketEvent extends CustomEvent {
+    protected final PlayerBucketEmptyEvent sourceEvent;
 
-    public PlayerPlaceBlockEvent(@NotNull BlockPlaceEvent sourceEvent) {
+    public PlayerEmptyBucketEvent(@NotNull PlayerBucketEmptyEvent sourceEvent) {
         this.sourceEvent = sourceEvent;
     }
 
     @Override
     public String getPermission() {
         return String.format(
-            Permissions.BLOCK_PLACE.getPermission(),
+            Permissions.BUCKET_EMPTY.getPermission(),
             getPermissionParameters()
         );
     }
@@ -24,7 +24,7 @@ public class PlayerPlaceBlockEvent extends CustomEvent {
     @Override
     public String[] getPermissionParameters() {
         return new String[] {
-            sourceEvent.getBlock().getType().name()
+            sourceEvent.getItemStack().getType().name()
         };
     }
 }

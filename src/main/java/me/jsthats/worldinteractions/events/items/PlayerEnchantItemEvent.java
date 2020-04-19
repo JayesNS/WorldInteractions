@@ -1,38 +1,19 @@
 package me.jsthats.worldinteractions.events.items;
 
-import me.jsthats.worldinteractions.enums.Permissions;
-import me.jsthats.worldinteractions.events.CustomEvent;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
+import me.jsthats.worldinteractions.events.CustomEvent;
 
 public class PlayerEnchantItemEvent extends CustomEvent {
-    protected final Player player;
-    protected final ItemStack item;
+    protected final EnchantItemEvent sourceEvent;
 
-    public PlayerEnchantItemEvent(@NotNull Player player, @NotNull ItemStack item) {
-        this.player = player;
-        this.item = item;
-    }
-
-    @NotNull
-    public Player getPlayer() {
-        return player;
-    }
-
-    @NotNull
-    public ItemStack getItem() {
-        return item;
+    public PlayerEnchantItemEvent(@NotNull EnchantItemEvent sourceEvent) {
+        this.sourceEvent = sourceEvent;
     }
 
     @Override
     public String getPermission() {
-        return String.format(
-            Permissions.ENCHANT_ITEM.getPermission(),
-            this.item.getType().name()
-        );
+        return null;
     }
 }

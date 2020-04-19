@@ -64,7 +64,8 @@ public class PluginConfig {
     }
 
     public boolean shouldShowMessageFor(String permission) {
-        return !this.config.getStringList("do_not_show_message_for").contains(permission);
+        return !this.config.getStringList("do_not_show_message_for").stream()
+                .anyMatch(message -> permission.contains(message));
     }
 
     public ConfigurationSection getItemsUse() {

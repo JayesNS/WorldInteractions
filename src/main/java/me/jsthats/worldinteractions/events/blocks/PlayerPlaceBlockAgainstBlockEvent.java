@@ -1,30 +1,28 @@
 package me.jsthats.worldinteractions.events.blocks;
 
-import me.jsthats.worldinteractions.enums.Permissions;
-import me.jsthats.worldinteractions.events.CustomEvent;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.bukkit.event.block.BlockPlaceEvent;
+
+import me.jsthats.worldinteractions.enums.Permissions;
 
 public class PlayerPlaceBlockAgainstBlockEvent extends PlayerPlaceBlockEvent {
-    protected final Block blockAgainst;
-
-    public PlayerPlaceBlockAgainstBlockEvent(@NotNull Player player, @NotNull Block block, @NotNull Block blockAgainst) {
-        super(player, block);
-        this.blockAgainst = blockAgainst;
-    }
-
-    @NotNull
-    public Block getBlockAgainst() {
-        return blockAgainst;
+    public PlayerPlaceBlockAgainstBlockEvent(@NotNull BlockPlaceEvent sourceEvent) {
+        super(sourceEvent);
     }
 
     @Override
     public String getPermission() {
         return String.format(
             Permissions.BLOCK_PLACE_AGAINST.getPermission(),
-            this.block.getType().name(),
-            this.blockAgainst.getType().name()
+            getPermissionParameters()
         );
+    }
+
+    @Override
+    public String[] getPermissionParameters() {
+        return new String[] {
+            sourceEvent.getBlock().getType().name(),
+            sourceEvent.getBlockAgainst().getType().name()
+        };
     }
 }

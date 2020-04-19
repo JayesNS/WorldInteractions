@@ -4,32 +4,28 @@ import me.jsthats.worldinteractions.enums.Permissions;
 import me.jsthats.worldinteractions.events.CustomEvent;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.jetbrains.annotations.NotNull;
 
 public class PlayerBreakBlockEvent extends CustomEvent {
-    protected final Player player;
-    protected final Block block;
+    protected final BlockBreakEvent sourceEvent;
 
-    public PlayerBreakBlockEvent(@NotNull Player player, @NotNull Block block) {
-        this.player = player;
-        this.block = block;
-    }
-
-    @NotNull
-    public Player getPlayer() {
-        return player;
-    }
-
-    @NotNull
-    public Block getBlock() {
-        return block;
+    public PlayerBreakBlockEvent(@NotNull BlockBreakEvent sourceEvent) {
+        this.sourceEvent = sourceEvent;
     }
 
     @Override
     public String getPermission() {
         return String.format(
             Permissions.BLOCK_BREAK.getPermission(),
-            this.block.getType().name()
+            getPermissionParameters()
         );
+    }
+
+    @Override
+    public String[] getPermissionParameters() {
+        return new String[] {
+            sourceEvent.getBlock().getType().name()
+        };
     }
 }

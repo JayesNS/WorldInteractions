@@ -21,6 +21,7 @@ package me.jsthats.worldinteractions.listeners.bukkit;
 import me.jsthats.worldinteractions.events.*;
 import me.jsthats.worldinteractions.events.blocks.*;
 import me.jsthats.worldinteractions.helpers.GenericListener;
+import me.jsthats.worldinteractions.helpers.ObjectGroups;
 import me.jsthats.worldinteractions.helpers.PlayerNotifier;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -32,6 +33,8 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
+import org.bukkit.event.player.PlayerBucketEmptyEvent;
+import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import me.jsthats.worldinteractions.helpers.PluginConfig;
@@ -42,8 +45,8 @@ import me.jsthats.worldinteractions.helpers.PluginConfig;
 public class BlockListener extends GenericListener {
 	PluginConfig config;
 
-	public BlockListener(Plugin plugin, PluginConfig config, PlayerNotifier notifier) {
-		super(plugin, config, notifier);
+	public BlockListener(Plugin plugin, PluginConfig config, PlayerNotifier notifier, ObjectGroups objectGroups) {
+		super(plugin, config, notifier, objectGroups);
 
 		this.config = config;
 	}
@@ -51,69 +54,56 @@ public class BlockListener extends GenericListener {
 	@EventHandler(priority = EventPriority.LOW)
 	public void onBlockBreak(BlockBreakEvent event) {
 		Player player = event.getPlayer();
-		Block block = event.getBlock();
 		ItemStack itemInHand = player.getInventory().getItemInMainHand();
 
 		if (itemInHand == null) {
 			return;
 		}
 
-		if (itemInHand.getType() == Material.AIR) {
-			CustomEvent.callCustomEvent(new PlayerBreakBlockEvent(player, block), event);
-		} else if (itemInHand.getType() != Material.AIR) {
-			CustomEvent.callCustomEvent(new PlayerBreakBlockWithItemEvent(player, block, itemInHand), event);
-		}
+		CustomEvent.call(new PlayerBreakBlockWithItemEvent(event), event);
 	}
 
 	@EventHandler(priority = EventPriority.LOW)
 	public void onBlockPlace(BlockPlaceEvent event) {
-		Player player = event.getPlayer();
 		Block block = event.getBlock();
 		Block blockAgainst = event.getBlockAgainst();
-		ItemStack itemInHand = event.getItemInHand();
 
 		if (blockAgainst == null) {
 			return;
 		}
 
-		if (blockAgainst.getType() == Material.AIR) {
-			CustomEvent.callCustomEvent(new PlayerPlaceBlockEvent(player, block), event);
-		} else if (block.getType() == Material.FARMLAND || block.getType() == Material.GRASS_PATH) {
-			CustomEvent.callCustomEvent(new PlayerPlaceBlockUsingItemEvent(player, block, itemInHand), event);
-		} else if (blockAgainst.getType() != Material.AIR) {
-			CustomEvent.callCustomEvent(new PlayerPlaceBlockAgainstBlockEvent(player, block, blockAgainst), event);
+		if (block.getType() == Material.FARMLAND || block.getType() == Material.GRASS_PATH) {
+			CustomEvent.call(new PlayerPlaceBlockUsingItemEvent(event), event);
+		} else {
+			CustomEvent.call(new PlayerPlaceBlockAgainstBlockEvent(event), event);
 		}
 	}
 
 	@EventHandler(priority = EventPriority.LOW)
 	public void onHangingBreakByEntity(HangingBreakByEntityEvent event) {
 		if (event.getRemover() instanceof Player) {
-			Player player = (Player) event.getRemover();
-			Entity hanging = event.getEntity();
-			ItemStack itemInHand = player.getInventory().getItemInMainHand();
-
-			if (itemInHand.getType() == Material.AIR) {
-				CustomEvent.callCustomEvent(new PlayerBreakHangingEvent(player, hanging), event);
-			} else if (itemInHand.getType() != Material.AIR) {
-				CustomEvent.callCustomEvent(new PlayerBreakHangingWithItemEvent(player, hanging, itemInHand), event);
-			}
+			CustomEvent.call(new PlayerBreakHangingWithItemEvent(event), event);
 		}
 	}
 
 	@EventHandler(priority = EventPriority.LOW)
 	public void onHangingPlace(HangingPlaceEvent event) {
 		Player player = event.getPlayer();
-		Entity hanging = event.getEntity();
-		Block blockAgainst = event.getBlock();
 
 		if (player == null) {
 			return;
 		}
 
-		if (blockAgainst.getType() == Material.AIR) {
-			CustomEvent.callCustomEvent(new PlayerPlaceHangingEvent(player, hanging), event);
-		} else if (blockAgainst.getType() != Material.AIR) {
-			CustomEvent.callCustomEvent(new PlayerPlaceHangingAgainstBlockEvent(player, hanging, blockAgainst), event);
-		}
+		CustomEvent.call(new PlayerPlaceHangingAgainstBlockEvent(event), event);
+	}
+
+	@EventHandler(priority = EventPriority.LOW)
+	public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
+		CustomEvent.call(new PlayerEmptyBucketEvent(event), event);
+	}
+
+	@EventHandler(priority = EventPriority.LOW)
+	public void onPlayerBucketFill(PlayerBucketFillEvent event) {
+		CustomEvent.call(new PlayerFillBucketEvent(event), event);
 	}
 }

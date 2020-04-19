@@ -18,20 +18,17 @@
 
 package me.jsthats.worldinteractions.listeners.bukkit;
 
-import me.jsthats.worldinteractions.enums.EntityCategory;
 import me.jsthats.worldinteractions.events.CustomEvent;
-import me.jsthats.worldinteractions.events.vehicles.PlayerBreakVehicleEvent;
-import me.jsthats.worldinteractions.events.vehicles.PlayerBreakVehicleWithEvent;
-import me.jsthats.worldinteractions.helpers.GenericListener;
-import me.jsthats.worldinteractions.enums.Permissions;
-import me.jsthats.worldinteractions.helpers.PlayerNotifier;
-import me.jsthats.worldinteractions.helpers.PluginConfig;
+import me.jsthats.worldinteractions.events.vehicles.*;
+import me.jsthats.worldinteractions.helpers.*;
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.vehicle.VehicleDamageEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
@@ -44,13 +41,13 @@ import org.bukkit.plugin.Plugin;
 public class VehicleListener extends GenericListener {
 	PluginConfig config;
 
-	public VehicleListener(Plugin plugin, PluginConfig config, PlayerNotifier notifier) {
-		super(plugin, config, notifier);
+	public VehicleListener(Plugin plugin, PluginConfig config, PlayerNotifier notifier, ObjectGroups objectGroups) {
+		super(plugin, config, notifier, objectGroups);
 
 		this.config = config;
 	}
 
-	@Deprecated
+	// FIXME: PlayerBreakVehicleWithItem calls both PlayerBreakVehicleWithItem and PlayerBreakVehicle
     @EventHandler(priority = EventPriority.LOW)
 	public void onVehicleDamage(VehicleDamageEvent event) {
 		if (event.getAttacker() instanceof Player) {
@@ -63,45 +60,53 @@ public class VehicleListener extends GenericListener {
 			}
 
 			if (itemInHand.getType() != Material.AIR) {
-				CustomEvent.callCustomEvent(new PlayerBreakVehicleWithEvent(player, vehicle, itemInHand), event);
-			} else if (itemInHand.getType() == Material.AIR) {
+				CustomEvent.call(new PlayerBreakVehicleWithItemEvent(player, vehicle, itemInHand), event);
+			}/* else if (itemInHand.getType() == Material.AIR) {
 				CustomEvent.callCustomEvent(new PlayerBreakVehicleEvent(player, vehicle), event);
-			}
+			}*/
 		}
 	}
 
-	@Deprecated
-    @EventHandler(priority = EventPriority.LOW)
+	@EventHandler(priority = EventPriority.LOW)
 	public void onVehicleEnter(VehicleEnterEvent event) {
 		if (!(event.getEntered() instanceof Player)) {
 			return;
 		}
+
 		Player player = (Player) event.getEntered();
-		Entity entity = event.getVehicle();
+		Vehicle vehicle = event.getVehicle();
 
-		if (EntityCategory.isCategory(entity, EntityCategory.ANIMAL)
-			&& !doesPlayerHavePermission(player, Permissions.RIDE, entity)) {
-			event.setCancelled(true);
-		}
-
-		if (!EntityCategory.isCategory(entity, EntityCategory.ANIMAL)
-			&& !doesPlayerHavePermission(player, Permissions.VEHICLE_ENTER, entity)) {
-			event.setCancelled(true);
+		// FIXME: Entering boat triggers event twice
+		if (ObjectUtils.isVehicle(vehicle)) {
+			CustomEvent.call(new PlayerEnterVehicleEvent(player, vehicle), event);
 		}
 	}
 
-	@Deprecated
     @EventHandler(priority = EventPriority.LOW)
 	public void onVehicleEntityCollision(VehicleEntityCollisionEvent event) {
-		if (event.getEntity() instanceof Player) {
-			Player player = (Player) event.getEntity();
-			Vehicle vehicle = event.getVehicle();
-			if (!doesPlayerHavePermission(player, Permissions.VEHICLE_COLLIDE, vehicle)) {
-				event.setCancelled(true);
-				event.setCollisionCancelled(true);
-				event.setPickupCancelled(true);
-			}
+		if (!(event.getEntity() instanceof Player)) {
+			return;
+		}
+		Player player = (Player) event.getEntity();
+		Vehicle vehicle = event.getVehicle();
+
+		CustomEvent.call(new PlayerPushVehicleEvent(player, vehicle), event);
+	}
+
+	// FIXME: Unable to get wood type of placed boat
+	@EventHandler(priority = EventPriority.LOW)
+	public void onPlayerInteract(PlayerInteractEvent event) {
+		Player player = event.getPlayer();
+		ItemStack itemInHand = event.getItem();
+
+		if (itemInHand == null) {
+			return;
 		}
 
+		if (event.getBlockFace() == BlockFace.UP
+			&& event.getAction() == Action.RIGHT_CLICK_BLOCK
+			&& ObjectUtils.isVehicle(itemInHand.getType())) {
+			CustomEvent.call(new PlayerPlaceVehicleEvent(player, itemInHand), event);
+		}
 	}
 }

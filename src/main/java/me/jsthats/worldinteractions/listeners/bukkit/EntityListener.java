@@ -18,19 +18,22 @@
 
 package me.jsthats.worldinteractions.listeners.bukkit;
 
-import me.jsthats.worldinteractions.helpers.GenericListener;
 import me.jsthats.worldinteractions.enums.Permissions;
-import me.jsthats.worldinteractions.helpers.PlayerNotifier;
+import me.jsthats.worldinteractions.events.CustomEvent;
+import me.jsthats.worldinteractions.events.entity.*;
+import me.jsthats.worldinteractions.events.player.PlayerShootBowEvent;
+import me.jsthats.worldinteractions.helpers.*;
+import org.bukkit.Material;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.*;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import me.jsthats.worldinteractions.helpers.PluginConfig;
 
 /**
  * @author t3hk0d3 Jayes
@@ -38,106 +41,96 @@ import me.jsthats.worldinteractions.helpers.PluginConfig;
 public class EntityListener extends GenericListener {
 	PluginConfig config;
 
-	public EntityListener(Plugin plugin, PluginConfig config, PlayerNotifier notifier) {
-		super(plugin, config, notifier);
+	public EntityListener(Plugin plugin, PluginConfig config, PlayerNotifier notifier, ObjectGroups objectGroups) {
+		super(plugin, config, notifier, objectGroups);
 
 		this.config = config;
 	}
 
-	@Deprecated
-	@EventHandler(priority = EventPriority.LOW)
-	public void onEntityDamage(EntityDamageByEntityEvent event) {
-		if (event.getDamager() instanceof Player) {
-			Player player = (Player) event.getDamager();
-			Entity damagedEntity = event.getEntity();
-			ItemStack itemInHand = player.getInventory().getItemInMainHand();
-
-			if (config.shouldCheckItemsUse()
-				&& config.getLeftClickItemsUse().contains(itemInHand.getType())
-				&& !doesPlayerHavePermission(player, Permissions.USE, itemInHand, "on", damagedEntity)) {
-				event.setCancelled(true);
-				return; // Stop checking further if player cannot use item
-			}
-			if (!doesPlayerHavePermission(player, Permissions.DAMAGE_DEAL, damagedEntity)) {
-				event.setCancelled(true);
-			}
-		}
-	}
-
-	@Deprecated
 	@EventHandler(priority = EventPriority.LOW)
 	public void onEntityTame(EntityTameEvent event) {
-		if (!(event.getOwner() instanceof Player)) {
-			return;
+		if (event.getOwner() instanceof Player) {
+			CustomEvent.call(new PlayerTameEntityEvent(event), event);
 		}
 
-		Player player = (Player) event.getOwner();
-		Entity tamedEntity = event.getEntity();
-
-		if (!doesPlayerHavePermission(player, Permissions.TAME, tamedEntity)) {
-			event.setCancelled(true);
-		}
 	}
 
-	@Deprecated
 	@EventHandler(priority = EventPriority.LOW)
 	public void onEntityBreed(EntityBreedEvent event) {
 		if (event.getBreeder() instanceof Player) {
-			Player player = (Player) event.getBreeder();
-			LivingEntity animal = event.getEntity();
-			Animals yourMum = (Animals) event.getMother();
-			Animals yourDad = (Animals) event.getFather();
-			if (!doesPlayerHavePermission(player, Permissions.BREED, animal)) {
-				event.setCancelled(true);
-				yourMum.setLoveModeTicks(0);
-				yourDad.setLoveModeTicks(0);
+
+			if (CustomEvent.call(new PlayerBreedEntitiesEvent(event), event)) {
+				// Reset breeding state of parents
+				((Animals) event.getFather()).setLoveModeTicks(0);
+				((Animals) event.getMother()).setLoveModeTicks(0);
 			}
 		}
 	}
 
-	@Deprecated
 	@EventHandler(priority = EventPriority.LOW)
 	public void onEntityShootBow(EntityShootBowEvent event) {
 		if (event.getEntity() instanceof Player) {
-			Player player = (Player) event.getEntity();
-			ItemStack bow = event.getBow();
-			Entity projectile = event.getProjectile();
-
-			if (config.shouldCheckItemsUse()
-				&& !doesPlayerHavePermission(player, Permissions.USE, bow)) {
-				event.setCancelled(true);
-				return;
-			}
-
-			if (!doesPlayerHavePermission(player, Permissions.SHOOT, bow, projectile)) {
-				event.setCancelled(true);
-			}
+			CustomEvent.call(new PlayerShootBowEvent(event), event);
 		}
 	}
 
 	@Deprecated
 	@EventHandler(priority = EventPriority.LOW)
 	public void onEntityTarget(EntityTargetEvent event) {
-		if (event.getTarget() instanceof Player) {
+/*		if (event.getTarget() instanceof Player) {
 			Player player = (Player) event.getTarget();
 			Entity targetingEntity = event.getEntity();
 
 			if (!doesPlayerHavePermission(player, Permissions.TARGET_BY, targetingEntity)) {
 				event.setCancelled(true);
 			}
-		}
+		}*/
 	}
 
-	@Deprecated
 	@EventHandler(priority = EventPriority.LOW)
-	public void onEntityPickup(EntityPickupItemEvent event) {
-		if (event.getEntity() instanceof Player) {
-			Player player = (Player) event.getEntity();
-			ItemStack item = event.getItem().getItemStack();
+	public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
+		Player player = event.getPlayer();
+		Entity entity = event.getRightClicked();
+		ItemStack heldItem = player.getInventory().getItemInMainHand();
 
-			if (!doesPlayerHavePermission(player, Permissions.PICKUP, item)) {
-				event.setCancelled(true);
-			}
+		if (objectGroups.isInGroup(heldItem.getType(), ObjectGroups.GroupName.SPAWN_EGGS)) {
+			//event.setCancelled(true);
+			return;
 		}
+
+		if (objectGroups.isInGroup(heldItem.getType(), ObjectGroups.GroupName.DYES)
+				&& objectGroups.isInGroup(entity, ObjectGroups.GroupName.CAN_DYE_ENTITY)) {
+			CustomEvent.call(new PlayerDyeEntityEvent(event), event);
+		}
+
+		if (heldItem.getType() == Material.SHEARS
+				&& objectGroups.isInGroup(entity, ObjectGroups.GroupName.CAN_SHEAR_ENTITY)) {
+			// Shear event
+			CustomEvent.call(new PlayerShearEntityEvent(event), event);
+		}
+
+		if ((heldItem.getType() == Material.BOWL && entity.getType() == EntityType.MUSHROOM_COW)
+				|| (heldItem.getType() == Material.BUCKET && entity.getType() == EntityType.MUSHROOM_COW)
+				|| (heldItem.getType() == Material.BUCKET && entity.getType() == EntityType.COW)) {
+			CustomEvent.call(new PlayerMilkEntityEvent(event), event);
+		}
+
+		if (ObjectUtils.canBeMounted(entity)) {
+			// Mount event
+		}
+		// Feed entity
+		// Leash entity
+		// Cure entity (zombiefication)
+
+		/*if (config.shouldCheckItemsUse()
+			&& config.getRightClickItemsUse().contains(heldItem.getType())
+			&& !doesPlayerHavePermission(player, Permissions.USE, heldItem, "on", entity)) {
+			event.setCancelled(true);
+			return;
+		}*/
+
+		/*if (!doesPlayerHavePermission(player, Permissions.INTERACT, clickedEntity)) {
+			event.setCancelled(true);
+		}*/
 	}
 }

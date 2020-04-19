@@ -20,9 +20,7 @@ package me.jsthats.worldinteractions;
 
 import java.io.InputStreamReader;
 
-import me.jsthats.worldinteractions.helpers.GenericListener;
-import me.jsthats.worldinteractions.helpers.PlayerNotifier;
-import me.jsthats.worldinteractions.helpers.PluginConfig;
+import me.jsthats.worldinteractions.helpers.*;
 import me.jsthats.worldinteractions.listeners.bukkit.*;
 import me.jsthats.worldinteractions.listeners.custom.EventListeners;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -59,9 +57,12 @@ public class WorldInteractions extends JavaPlugin {
 	protected File configFile;
 	protected FileConfiguration config;
 
+	ObjectGroups objectGroups;
+
 	@Override
 	public void onLoad() {
 		configFile = new File(this.getDataFolder(), "config.yml");
+		objectGroups = new ObjectGroups(new PluginFile(this, "object-groups.yml", "object-groups.yml"));
 	}
 
 	@Override
@@ -72,13 +73,16 @@ public class WorldInteractions extends JavaPlugin {
 			this.getLogger().severe("Deploying default config");
 		}
 
-		this.notifier = new PlayerNotifier(new PluginConfig(config));
+		PluginConfig config = new PluginConfig(this.config);
+		this.notifier = new PlayerNotifier(config);
 
-		getServer().getPluginManager().registerEvents(new EventListeners(this.notifier), this);
+		getServer().getPluginManager().registerEvents(
+			new EventListeners(this.notifier, config), this);
 		this.registerListeners();
 		this.getLogger().info("WorldInteractions enabled!");
 
 		this.saveConfig();
+		this.saveDefaultConfig();
 	}
 
 	@Override
@@ -92,8 +96,8 @@ public class WorldInteractions extends JavaPlugin {
 	protected void registerListeners() {
 		for (Class<GenericListener> listenerClass : LISTENERS) {
 			try {
-				Constructor<GenericListener> constructor = listenerClass.getConstructor(Plugin.class, PluginConfig.class, PlayerNotifier.class);
-				GenericListener listener = constructor.newInstance(this, new PluginConfig(this.getConfig()), this.notifier);
+				Constructor<GenericListener> constructor = listenerClass.getConstructor(Plugin.class, PluginConfig.class, PlayerNotifier.class, ObjectGroups.class);
+				GenericListener listener = constructor.newInstance(this, new PluginConfig(this.getConfig()), this.notifier, objectGroups);
 				this.listeners.add(listener);
 			} catch (Throwable e) {
 				this.getLogger().warning("Failed to initialize \"" + listenerClass.getName() + "\" listener");

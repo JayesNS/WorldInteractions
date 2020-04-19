@@ -22,18 +22,21 @@ package me.jsthats.worldinteractions.enums;
  * @author Jayes
  */
 public enum Permissions {
-    // General,
+    // General
     CHAT("chat"),
     USE_BEDS("use-beds"),
+    FISH("fish.%s"),
     // Weapons
     SHOOT("shoot"),
     THROW("throw"),
-    // Entities,
+    // Entities
     INTERACT("interact"),
     TARGET_BY("target-by"),
-    DAMAGE_DEAL("damage.deal"),
-    TAME("mob.tame"),
-    BREED("mob.breed"),
+    DAMAGE_WITH("damage.%s.with.%s"),
+    TAME("tame.%s"),
+    BREED("breed.%s"),
+    MILK("milk.%s"),
+    SHEAR("shear.%s"),
     SPAWN("mob.spawn"),
     RIDE("mob.ride"),
     // Items
@@ -42,25 +45,32 @@ public enum Permissions {
     ENCHANT_ITEM_WITH("item.enchant.%s.with.%s.%s"),
     EAT("item.eat"),
     SMELT("item.smelt"),
-    CRAFT("item.craft"),
-    DROP("item.drop"),
-    PICKUP("item.pickup"),
-    HOLD("item.hold"),
+    CRAFT("item.craft.%s"),
+    DROP("item.drop.%s"),
+    PICKUP("item.pickup.%s"),
+    HOLD("item.hold.%s"),
+    DISCOVER_RECIPE("item.discover.%s"),
     // Blocks
-    BUCKET_EMPTY("bucket.empty"),
-    BUCKET_FILL("bucket.fill"),
+    BUCKET_EMPTY("bucket.empty.%s"),
+    BUCKET_FILL_WITH("bucket.fill.with.%s"),
     BLOCK_PLACE("block.place.%s"),
     BLOCK_PLACE_AGAINST("block.place.%s.against.%s"),
     BLOCK_PLACE_USING("block.place.%s.using.%s"),
     BLOCK_BREAK("block.break.%s"),
     BLOCK_BREAK_WITH("block.break.%s.with.%s"),
+    BLOCK_STRIP("block.strip.%s.with.%s"),
     // Mount
-    VEHICLE_ENTER("vehicle.enter"),
-    VEHICLE_PLACE("vehicle.place"),
+    VEHICLE_ENTER("vehicle.enter.%s"),
+    VEHICLE_PLACE("vehicle.place.%s"),
     VEHICLE_BREAK("vehicle.break.%s"),
     VEHICLE_BREAK_WITH("vehicle.break.%s.with.%s"),
-    VEHICLE_COLLIDE("vehicle.collide");
-
+    VEHICLE_PUSH("vehicle.push.%s"),
+    DYE("dye.%s.%s"),
+    TRADE("trade.%s"),
+    MOUNT("mount.%s"),
+    EQUIP_ENTITY_WITH_ITEM("equip.%s.with.%s"),
+    SIT_COMMAND("sit.%s"),
+    CATCH_FISH("catch.%s");
     private String permission;
 
     Permissions(String permission) {
@@ -69,6 +79,10 @@ public enum Permissions {
 
     public String getPermission() {
         return "worldinteractions." + permission;
+    }
+
+    public String getPermission(String ...args) {
+        return String.format(getPermission(), args);
     }
 
 }

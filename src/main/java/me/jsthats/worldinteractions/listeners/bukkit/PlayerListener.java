@@ -18,22 +18,26 @@
 
 package me.jsthats.worldinteractions.listeners.bukkit;
 
-import me.jsthats.worldinteractions.helpers.GenericListener;
+import me.jsthats.worldinteractions.events.CustomEvent;
+import me.jsthats.worldinteractions.events.entity.PlayerDamageEntityWithEvent;
+import me.jsthats.worldinteractions.events.entity.PlayerDyeEntityEvent;
+import me.jsthats.worldinteractions.events.entity.PlayerMilkEntityEvent;
+import me.jsthats.worldinteractions.events.entity.PlayerShearEntityEvent;
+import me.jsthats.worldinteractions.events.player.PlayerFishEntityEvent;
+import me.jsthats.worldinteractions.events.player.PlayerUseBedEvent;
+import me.jsthats.worldinteractions.helpers.*;
 import me.jsthats.worldinteractions.enums.Permissions;
-import me.jsthats.worldinteractions.helpers.MaterialUtils;
-import me.jsthats.worldinteractions.helpers.PlayerNotifier;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.*;
 import org.bukkit.plugin.Plugin;
-import me.jsthats.worldinteractions.helpers.PluginConfig;
 
 import java.util.Arrays;
 
@@ -44,43 +48,15 @@ public class PlayerListener extends GenericListener {
 
 	PluginConfig config;
 
-	public PlayerListener(Plugin plugin, PluginConfig config, PlayerNotifier notifier) {
-		super(plugin, config, notifier);
+	public PlayerListener(Plugin plugin, PluginConfig config, PlayerNotifier notifier, ObjectGroups objectGroups) {
+		super(plugin, config, notifier, objectGroups);
 
 		this.config = config;
 	}
 
-	@Deprecated
     @EventHandler(priority = EventPriority.LOW)
 	public void onPlayerBedEnter(PlayerBedEnterEvent event) {
-		Player player = event.getPlayer();
-
-		if (!doesPlayerHavePermission(player, Permissions.USE_BEDS)) {
-			event.setCancelled(true);
-		}
-	}
-
-	@Deprecated
-    @EventHandler(priority = EventPriority.LOW)
-	public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
-		Player player = event.getPlayer();
-		Material bucket = event.getBucket();
-
-		if (!doesPlayerHavePermission(player, Permissions.BUCKET_EMPTY, bucket)) {
-			event.setCancelled(true);
-		}
-	}
-
-	@Deprecated
-    @EventHandler(priority = EventPriority.LOW)
-	public void onPlayerBucketFill(PlayerBucketFillEvent event) {
-		Player player = event.getPlayer();
-		Material material = event.getBlockClicked().getType();
-
-		if (material != Material.AIR
-			&& !doesPlayerHavePermission(player, Permissions.BUCKET_FILL, material)) {
-			event.setCancelled(true);
-		}
+		CustomEvent.call(new PlayerUseBedEvent(event), event);
 	}
 
 	@Deprecated
@@ -93,79 +69,10 @@ public class PlayerListener extends GenericListener {
 		}
 	}
 
-	@Deprecated
-    @EventHandler(priority = EventPriority.LOW)
-	public void onPlayerDropItem(PlayerDropItemEvent event) {
-		Player player = event.getPlayer();
-		Item[] objectsToDescribe = {event.getItemDrop()};
-
-		if (!doesPlayerHavePermission(player, Permissions.DROP, objectsToDescribe)) {
-			event.setCancelled(true);
-		}
-	}
-
-	@Deprecated
-    @EventHandler(priority = EventPriority.LOW)
-	public void onItemHeldChange(PlayerItemHeldEvent event) {
-		Player player = event.getPlayer();
-		ItemStack item = player.getInventory().getItem(event.getNewSlot());
-
-		if (item == null) {
-			return;
-		}
-
-		Material[] ignoredItems = {Material.AIR};
-		boolean isIgnoredItem = Arrays.asList(ignoredItems).contains(item.getType());
-
-		if (!isIgnoredItem
-			&& !doesPlayerHavePermission(player, Permissions.HOLD, item)
-		) {
-			Inventory inventory = player.getInventory();
-
-			// Drop restricted items
-			if (config.shouldDropForbiddenItems()) {
-				inventory.remove(item);
-				player.getWorld().dropItemNaturally(player.getLocation(), item);
-			} else {
-				int freeSlot = inventory.firstEmpty();
-
-				if (freeSlot >= 9) { // Move item to another slot
-					inventory.remove(item);
-					inventory.setItem(freeSlot, item);
-					player.getInventory().setHeldItemSlot(inventory.firstEmpty());
-				} else if (freeSlot < 0) { // Not enough space in inventory, drop item
-					inventory.remove(item);
-					player.getWorld().dropItemNaturally(player.getLocation(), item);
-				} else { // Change held item
-					player.getInventory().setHeldItemSlot(freeSlot);
-				}
-			}
-			event.setCancelled(true);
-		}
-	}
-
-	@Deprecated
-    @EventHandler(priority = EventPriority.LOW)
-	public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
-		Player player = event.getPlayer();
-		Entity clickedEntity = event.getRightClicked();
-		ItemStack heldItem = player.getInventory().getItemInMainHand();
-
-		if (MaterialUtils.isSpawnEgg(heldItem.getType())
-			&& !doesPlayerHavePermission(player, Permissions.SPAWN, heldItem)) {
-			event.setCancelled(true);
-			return;
-		}
-
-		if (config.shouldCheckItemsUse()
-			&& config.getRightClickItemsUse().contains(heldItem.getType())
-			&& !doesPlayerHavePermission(player, Permissions.USE, heldItem, "on", clickedEntity)) {
-			event.setCancelled(true);
-			return;
-		}
-
-		if (!doesPlayerHavePermission(player, Permissions.INTERACT, clickedEntity)) {
-			event.setCancelled(true);
+	@EventHandler(priority = EventPriority.LOW)
+	public void onEntityDamage(EntityDamageByEntityEvent event) {
+		if (event.getDamager() instanceof Player) {
+			CustomEvent.call(new PlayerDamageEntityWithEvent(event), event);
 		}
 	}
 
@@ -204,7 +111,7 @@ public class PlayerListener extends GenericListener {
 			}*/
 
 			if ((action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR)
-				&& MaterialUtils.isSpawnEgg(heldItem.getType())
+				&& ObjectUtils.isSpawnEgg(heldItem.getType())
 				&& !doesPlayerHavePermission(player, Permissions.SPAWN, heldItem)) {
 				event.setCancelled(true);
 				return;
@@ -298,69 +205,20 @@ public class PlayerListener extends GenericListener {
 					event.setCancelled(true);
 				}
 			}
-		} else if (event.getCurrentItem() != null
+		}/* else if (event.getCurrentItem() != null
 			&& Arrays.asList(workstations).contains(inventory.getType())
 			&& event.getCurrentItem().getType() != Material.AIR
 			&& event.getSlotType() == InventoryType.SlotType.RESULT
 		    && !doesPlayerHavePermission(player, Permissions.CRAFT, event.getCurrentItem())
 		) {
 			event.setCancelled(true);
-		}
+		}*/
 	}
 
-	@Deprecated
-    @EventHandler(priority = EventPriority.LOW)
-	public void onPlayerRecipeDiscover(PlayerRecipeDiscoverEvent event) {
-		Player player = event.getPlayer();
-		String materialName = event.getRecipe().getKey().replaceAll("_from.*", "").toUpperCase();
-		Material material = Material.getMaterial(materialName);
-		Object[] arguments = {material};
-		if (!doesPlayerHavePermission(player, Permissions.CRAFT, arguments)) {
-			event.setCancelled(true);
-		}
-	}
-
-	@Deprecated
     @EventHandler(priority = EventPriority.LOW)
 	public void onPlayerFish(PlayerFishEvent event) {
-		Player player = event.getPlayer();
-		ItemStack fishingRod = player.getInventory().getItemInMainHand();
-		if (config.shouldCheckItemsUse()
-			&& config.getRightClickItemsUse().contains(fishingRod.getType())
-			&& event.getState() == PlayerFishEvent.State.FISHING
-			&& !doesPlayerHavePermission(player, Permissions.USE, Material.FISHING_ROD)
-		) {
-			event.setCancelled(true);
-		}
-	}
-
-//	@Deprecated
-//	@EventHandler(priority = EventPriority.LOW)
-//	public void onItemCraft(CraftItemEvent event) {
-//		Player player = (Player) event.getWhoClicked();
-//		ItemStack craftedItem = event.getRecipe().getResult();
-//
-//		if (!doesPlayerHavePermission(player, Permissions.CRAFT, craftedItem)) {
-//			event.setCancelled(true);
-//		}
-//	}
-
-	@Deprecated
-    @EventHandler(priority = EventPriority.LOW)
-	public void onFoodLevelChange(FoodLevelChangeEvent event) {
-		if (event.getEntity() instanceof Player) {
-			Player player = (Player) event.getEntity();
-			ItemStack foodSource = event.getItem();
-
-			if (foodSource != null
-				&& !doesPlayerHavePermission(player, Permissions.EAT, foodSource)
-			) {
-				event.setCancelled(true);
-
-				// Return food to player
-				foodSource.setAmount(1);
-				player.getInventory().addItem(foodSource);
-			}
+		if (event.getState() == PlayerFishEvent.State.FISHING) {
+			CustomEvent.call(new PlayerFishEntityEvent(event), event);
 		}
 	}
 }

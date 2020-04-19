@@ -1,15 +1,16 @@
 package me.jsthats.worldinteractions.events.vehicles;
 
 import me.jsthats.worldinteractions.enums.Permissions;
+import me.jsthats.worldinteractions.events.CustomEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class PlayerBreakVehicleWithEvent extends PlayerBreakVehicleEvent {
-    protected final ItemStack item;
+public class PlayerBreakVehicleWithItemEvent extends PlayerBreakVehicleEvent {
+    protected ItemStack item;
 
-    public PlayerBreakVehicleWithEvent(@NotNull Player player, @NotNull Vehicle vehicle, @NotNull ItemStack item) {
+    public PlayerBreakVehicleWithItemEvent(@NotNull Player player, @NotNull Vehicle vehicle, @NotNull ItemStack item) {
         super(player, vehicle);
         this.item = item;
     }

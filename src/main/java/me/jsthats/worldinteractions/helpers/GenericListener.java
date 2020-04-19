@@ -37,11 +37,13 @@ public abstract class GenericListener implements Listener {
 	protected PlayerNotifier notifier;
 	protected PluginConfig config;
 	protected Plugin plugin;
+	protected ObjectGroups objectGroups;
 
-	public GenericListener(Plugin plugin, PluginConfig config, PlayerNotifier notifier) {
+	public GenericListener(Plugin plugin, PluginConfig config, PlayerNotifier notifier, ObjectGroups objectGroups) {
 		this.notifier = notifier;
 		this.config = config;
 		this.plugin = plugin;
+		this.objectGroups = objectGroups;
 
 		this.registerEvents(plugin);
 	}

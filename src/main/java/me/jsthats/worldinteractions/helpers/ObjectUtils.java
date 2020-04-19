@@ -19,14 +19,18 @@
 package me.jsthats.worldinteractions.helpers;
 
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.entity.*;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Jayes
  */
-public abstract class MaterialUtils {
+public abstract class ObjectUtils {
     public static boolean isBoat(Material material) {
         final List<Material> BOATS = Arrays.asList(
             Material.ACACIA_BOAT,
@@ -89,12 +93,38 @@ public abstract class MaterialUtils {
         return MINECARTS.contains(material);
     }
 
+    public static Material getMaterialFromNamespacedKey(NamespacedKey namespacedKey) {
+        return Material.valueOf(namespacedKey.getKey().replace("_from.*", "").toUpperCase());
+    }
+
+    public static EntityType getEntityTypeOfMaterial(Material material) {
+        Map<Material, EntityType> materialToEntityMap = new HashMap<Material, EntityType>() {{
+            put(Material.ACACIA_BOAT, EntityType.BOAT);
+            put(Material.BIRCH_BOAT, EntityType.BOAT);
+            put(Material.DARK_OAK_BOAT, EntityType.BOAT);
+            put(Material.JUNGLE_BOAT, EntityType.BOAT);
+            put(Material.OAK_BOAT, EntityType.BOAT);
+            put(Material.SPRUCE_BOAT, EntityType.BOAT);
+            put(Material.MINECART, EntityType.MINECART);
+            put(Material.CHEST_MINECART, EntityType.MINECART_CHEST);
+            put(Material.COMMAND_BLOCK_MINECART, EntityType.MINECART_COMMAND);
+            put(Material.FURNACE_MINECART, EntityType.MINECART_FURNACE);
+            put(Material.HOPPER_MINECART, EntityType.MINECART_HOPPER);
+            put(Material.TNT_MINECART, EntityType.MINECART_TNT);
+        }};
+        return materialToEntityMap.get(material);
+    }
+
     public static boolean isVehicle(Material material) {
         return isBoat(material) || isMinecart(material);
     }
 
+    public static boolean isVehicle(Entity entity) {
+        return (entity instanceof Minecart || entity instanceof Boat);
+    }
+
     public static boolean isSpawnEgg(Material material) {
-        final List<Material> SPAWN_EGGS = Arrays.asList(
+        final List<Material> list = Arrays.asList(
             Material.BAT_SPAWN_EGG,
             Material.BLAZE_SPAWN_EGG,
             Material.CAVE_SPIDER_SPAWN_EGG,
@@ -154,6 +184,102 @@ public abstract class MaterialUtils {
             Material.TRADER_LLAMA_SPAWN_EGG,
             Material.WANDERING_TRADER_SPAWN_EGG
         );
-        return SPAWN_EGGS.contains(material);
+        return list.contains(material);
+    }
+
+    public static boolean canBeCured(Entity entity) {
+        final List<EntityType> list = Arrays.asList(
+            EntityType.ZOMBIE_VILLAGER
+        );
+
+        return list.contains(entity.getType());
+    }
+
+    public static boolean canBeTamed(Entity entity) {
+        final List<EntityType> list = Arrays.asList(
+            EntityType.CAT,
+            EntityType.DONKEY,
+            EntityType.HORSE,
+            EntityType.MULE,
+            EntityType.OCELOT,
+            EntityType.PARROT,
+            EntityType.LLAMA,
+            EntityType.WOLF
+        );
+
+        return list.contains(entity.getType());
+    }
+
+    public static boolean canBeMounted(Entity entity) {
+        final List<EntityType> list = Arrays.asList(
+            EntityType.DONKEY,
+            EntityType.HORSE,
+            EntityType.MULE,
+            EntityType.PIG,
+            EntityType.SKELETON_HORSE,
+            EntityType.LLAMA,
+            EntityType.TRADER_LLAMA
+        );
+
+        return list.contains(entity.getType());
+    }
+
+    public static boolean isDye(Material material) {
+        final List<Material> list = Arrays.asList(
+            Material.BLACK_DYE,
+                Material.BLUE_DYE,
+                Material.BROWN_DYE,
+                Material.CYAN_DYE,
+                Material.GRAY_DYE,
+                Material.GREEN_DYE,
+                Material.LIGHT_BLUE_DYE,
+                Material.LIGHT_GRAY_DYE,
+                Material.LIME_DYE,
+                Material.MAGENTA_DYE,
+                Material.ORANGE_DYE,
+                Material.PINK_DYE,
+                Material.PURPLE_DYE,
+                Material.RED_DYE,
+                Material.WHITE_DYE,
+                Material.YELLOW_DYE
+        );
+
+        return list.contains(material);
+    }
+
+    public static boolean canBeDyed(Entity entity) {
+        final List<EntityType> list = Arrays.asList(
+            EntityType.CAT,
+            EntityType.SHEEP,
+            EntityType.WOLF
+        );
+
+        return list.contains(entity.getType());
+    }
+
+    public static boolean canTradeWith(Entity entity) {
+        final List<EntityType> list = Arrays.asList(
+            EntityType.VILLAGER,
+            EntityType.WANDERING_TRADER
+        );
+
+        return list.contains(entity.getType());
+    }
+
+    public static boolean canBeMilked(Entity entity) {
+        final List<EntityType> list = Arrays.asList(
+            EntityType.COW,
+            EntityType.MUSHROOM_COW
+        );
+
+        return list.contains(entity.getType());
+    }
+
+    public static boolean canBeIgnited(Entity entity) {
+        final List<EntityType> list = Arrays.asList(
+            EntityType.CREEPER
+        );
+
+        return list.contains(entity.getType());
     }
 }

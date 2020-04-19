@@ -4,32 +4,32 @@ import me.jsthats.worldinteractions.enums.Permissions;
 import me.jsthats.worldinteractions.events.CustomEvent;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.jetbrains.annotations.NotNull;
 
 public class PlayerBreakHangingEvent extends CustomEvent {
-    protected final Player player;
-    protected final Entity hanging;
+    protected final HangingBreakByEntityEvent sourceEvent;
 
-    public PlayerBreakHangingEvent(@NotNull Player player, @NotNull Entity hanging) {
-        this.player = player;
-        this.hanging = hanging;
+    public PlayerBreakHangingEvent(@NotNull HangingBreakByEntityEvent sourceEvent) {
+        this.sourceEvent = sourceEvent;
     }
 
-    @NotNull
     public Player getPlayer() {
-        return player;
-    }
-
-    @NotNull
-    public Entity getHanging() {
-        return hanging;
+        return (Player) sourceEvent.getRemover();
     }
 
     @Override
     public String getPermission() {
         return String.format(
             Permissions.BLOCK_BREAK.getPermission(),
-            this.hanging.getType().name()
+            getPermissionParameters()
         );
+    }
+
+    @Override
+    public String[] getPermissionParameters() {
+        return new String[] {
+            sourceEvent.getEntity().getType().name()
+        };
     }
 }

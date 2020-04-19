@@ -35,7 +35,8 @@ public class PlayerNotifier {
 	}
 
 	public void informPlayer(Player player, String permission, String ...args) {
-		if (!config.shouldInformPlayer()) {
+		boolean shouldNotify = config.shouldShowMessageFor(permission);
+		if (!shouldNotify || !config.shouldInformPlayer()) {
 			return;
 		}
 		ConfigurationSection allMessages = config.getMessages();

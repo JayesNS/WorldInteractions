@@ -6,17 +6,17 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import me.jsthats.worldinteractions.enums.Permissions;
 import me.jsthats.worldinteractions.events.CustomEvent;
 
-public class PlayerPlaceBlockEvent extends CustomEvent {
+public class PlayerStripBlockEvent extends CustomEvent {
     protected final BlockPlaceEvent sourceEvent;
 
-    public PlayerPlaceBlockEvent(@NotNull BlockPlaceEvent sourceEvent) {
+    public PlayerStripBlockEvent(@NotNull BlockPlaceEvent sourceEvent) {
         this.sourceEvent = sourceEvent;
     }
 
     @Override
     public String getPermission() {
         return String.format(
-            Permissions.BLOCK_PLACE.getPermission(),
+            Permissions.BLOCK_STRIP.getPermission(),
             getPermissionParameters()
         );
     }
@@ -24,7 +24,8 @@ public class PlayerPlaceBlockEvent extends CustomEvent {
     @Override
     public String[] getPermissionParameters() {
         return new String[] {
-            sourceEvent.getBlock().getType().name()
+            sourceEvent.getBlock().getType().name(),
+            sourceEvent.getPlayer().getItemOnCursor().getType().name()
         };
     }
 }
